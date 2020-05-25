@@ -1,10 +1,10 @@
 ﻿<?php
- $field = array("accounts_id","username","email");
+ $field = array("amount","terms","remarks","penalty","interest");
  $where = getwheresearch($field);
- $total = countquery("SELECT username FROM tbl_accounts");
+ $total = countquery("SELECT id FROM tbl_loan WHERE user='{$_GET['id']}'");
  //primary query
  $limit = getlimit(10,$_GET['p']);
- $query = "SELECT * FROM tbl_accounts $where $limit";
+ $query = "SELECT * FROM tbl_loan $where $limit";
 
  $q = mysql_query($query);
  $options = getpackagelist();
@@ -54,9 +54,12 @@ foreach($field as $ff){
             <thead>
                <tr role='row'>
                   
-                  <th>UserName</th>
-                  <th>Email</th>
-                  <th>Role</th>
+                  <th>Loan Amount</th>
+                  <th>Net Amount</th>
+                  <th>Terms</th>
+                  <th>Remarks</th>
+                  <th>Interest</th>
+                  <th>Penalty</th>
                   <th>Action</th>
                </tr>
             </thead>
@@ -64,15 +67,18 @@ foreach($field as $ff){
                <?php
                   while($row=mysql_fetch_array($q))
                   {
-                    $pid = $row['accounts_id'];
+                    $pid = $row['id'];
                     $roledata = ($row['role'] >= 1 ? 'Administrator' : 'Teller');
                   ?>
                <tr>
-                  <td><?php echo $row['username']; ?></td>
-                  <td><?php echo $row['email']; ?></td>
-                  <td><?php echo $roledata; ?></td>
+                  <td><?php echo number_format($row['amount'],2); ?></td>
+                  <td><?php echo number_format($row['amount'] + ($row['amount'] * percentget($row['interest'])),2);  ?></td>
+                  <td><?php echo $row['terms']; ?></td>
+                  <td><?php echo $row['remarks']; ?></td>
+                  <td><?php echo $row['interest']; ?>%</td>
+                  <td><?php echo $row['penalty']; ?>%</td>
                   <td>
-                     <input onclick="window.location='<?php echo "?pages=".$_GET['pages']."&task=edit&id=$pid"; ?>';" type="button" class="btn btn-primary btn-sm" value="Edit">
+                     <input onclick="window.location='<?php echo "?pages=".$_GET['pages']."&task=loan-edit&id=$pid&uid={$_GET['id']}"; ?>';" type="button" class="btn btn-primary btn-sm" value="Edit">
                      <input onclick="window.location='<?php echo "?pages=".$_GET['pages']."&task=delete&id=$pid"; ?>';" type="button" class="btn btn-primary btn-sm" value="Delete">
                   </td>
                </tr>

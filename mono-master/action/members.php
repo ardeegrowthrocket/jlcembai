@@ -50,11 +50,75 @@ if($_POST['submit']!='' && $_POST['task']=='delete')
 
 if($_POST['submit']!='' && $_POST['task']=='loan-save')
 {
+	unset($_POST['submit']);
+	unset($_POST['task']);
+	$tbl = "tbl_loan";
+	$_POST['loan_date'] = $_POST['loan_date']." 00:00:00";
+	$_POST['loan_start'] = $_POST['loan_start']." 00:00:00";
 
-	var_dump($_POST);
-	exit();
+	$_POST['net'] = $_POST['amount'] + ($_POST['amount'] * percentget($_POST['interest']));
+
+
+	if($_POST['payment_type']=='weekly'){
+		$_POST['loop_number'] =  ($_POST['terms'] * 4);
+	}
+	if($_POST['payment_type']=='monthly'){
+		$_POST['loop_number'] =  ($_POST['terms'] * 1);
+	}
+	if($_POST['payment_type']=='cutoff'){
+		$_POST['loop_number'] =  ($_POST['terms'] * 2);
+	}
+
+
+	$_POST['penalty_fee'] = ($_POST['amount'] * percentget($_POST['penalty'])) / $_POST['loop_number'];
+
+	$_POST['loop_amount'] = $_POST['amount'] / $_POST['loop_number'];
+
+
+	$fields = formquery($_POST);
+	$_SESSION['noti'] = "Done adding loan data.";
+	$refresh = 1;
+	mysql_query("INSERT INTO $tbl SET $fields");
+	header("HTTP/1.1 301 Moved Permanently");
+	header("Location: index.php?id={$_POST['user']}&task=edit&pages=".$_REQUEST['pages']);
+	exit();	
 }
 
+if($_POST['submit']!='' && $_POST['task']=='loan-edit-save')
+{
+	unset($_POST['submit']);
+	unset($_POST['task']);
+	$tbl = "tbl_loan";
+	$_POST['loan_date'] = $_POST['loan_date']." 00:00:00";
+	$_POST['loan_start'] = $_POST['loan_start']." 00:00:00";
+
+	$_POST['net'] = $_POST['amount'] + ($_POST['amount'] * percentget($_POST['interest']));
+
+
+	if($_POST['payment_type']=='weekly'){
+		$_POST['loop_number'] =  ($_POST['terms'] * 4);
+	}
+	if($_POST['payment_type']=='monthly'){
+		$_POST['loop_number'] =  ($_POST['terms'] * 1);
+	}
+	if($_POST['payment_type']=='cutoff'){
+		$_POST['loop_number'] =  ($_POST['terms'] * 2);
+	}
+
+
+	$_POST['penalty_fee'] = ($_POST['amount'] * percentget($_POST['penalty'])) / $_POST['loop_number'];
+
+	$_POST['loop_amount'] = $_POST['amount'] / $_POST['loop_number'];
+
+
+	$fields = formquery($_POST);
+	$_SESSION['noti'] = "Done adding loan data.";
+	$refresh = 1;
+	mysql_query("UPDATE $tbl SET $fields WHERE $primary=".$_POST[$primary]);
+	header("HTTP/1.1 301 Moved Permanently");
+	header("Location: index.php?id={$_POST['id']}&uid={$_POST['user']}&task=loan-edit&pages=".$_REQUEST['pages']);
+	exit();	
+}
 
 
 
@@ -105,6 +169,11 @@ if($_GET['task']=='loan')
 {
 	echo "<a href='?id={$_GET['uid']}&task=edit&pages=".$_GET['pages']."'>Go back</a>";
 	include($_GET['pages']."/loan.php");
+}
+if($_GET['task']=='loan-edit')
+{
+	echo "<a href='?id={$_GET['uid']}&task=edit&pages=".$_GET['pages']."'>Go back</a>";
+	include($_GET['pages']."/loan-edit.php");
 }
 
 ?>

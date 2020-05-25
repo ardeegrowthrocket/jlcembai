@@ -12,6 +12,24 @@ if(!empty($_GET['uid'])){
       }
    }
 
+   $query  = mysql_query("SELECT * FROM tbl_loan WHERE $primary='{$_GET['id']}'");
+   while($row=mysql_fetch_assoc($query))
+   {
+      foreach($row as $key=>$val)
+      {
+          $sdata[$key] = str_replace("00:00:00","",$val);
+      }
+   }
+
+
+
+   if($sdata['loan_date']){
+      $sdata['loan_date'] = formatedateinput($sdata['loan_date']);
+   }
+   if($sdata['loan_start']){
+      $sdata['loan_start'] = formatedateinput($sdata['loan_start']);
+   }
+
 }
 
 
@@ -60,13 +78,19 @@ $field[] = array("type"=>"date","value"=>"loan_start","label"=>"Payment Start Da
 $field[] = array("type"=>"text","value"=>"remarks");
 $field[] = array("type"=>"select","value"=>"is_release","label"=>"Loan Is Released?","option"=>$release);
 
+
+
+
+var_dump(generatedate($sdata));
+
 ?>
-<h2>Add Loan - <?php echo  $sdata['name']; ?></h2>
+<h2>Edit Loan - <?php echo  $sdata['name']; ?></h2>
 <div class="panel panel-default">
    <div class="panel-body">
       <form method='POST' action='?pages=<?php echo $_GET['pages'];?>'>
 	  <input type='hidden' name='task' value='<?php echo $_GET['task'];?>-save'>
       <input type='hidden' name='user' value='<?php echo $_GET['uid'];?>'>
+      <input type='hidden' name='id' value='<?php echo $_GET['id'];?>'>
          <table width="100%">
             <?php
                $is_editable_field = 1;
@@ -143,16 +167,7 @@ $field[] = array("type"=>"select","value"=>"is_release","label"=>"Loan Is Releas
 
          <hr>
 
-         <center><input class='btn btn-primary btn-lg' type='submit' name='submit' value='<?php echo ucwords($_GET['task']);?>'></center>
+         <center><input class='btn btn-primary btn-lg' type='submit' name='submit' value='Edit Loan'></center>
       </form>
    </div>
 </div> 
-<style>
-   input[type="number"],input[type="date"],input[type="text"] ,select{
-      width:230px;
-      height: 30px;
-   }
-   tr.members-loan-helper {
-    display: none;
-}
-</style>

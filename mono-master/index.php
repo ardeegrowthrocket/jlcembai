@@ -38,7 +38,13 @@ $_SESSION[$key] = $val;
             display:none;
         }
     }
-
+   input[type="number"],input[type="date"],input[type="text"] ,select{
+      width:230px;
+      height: 30px;
+   }
+   tr.members-loan-helper  ,tr.members-loan-edit-helper{
+    display: none;
+}
    </style> 
 </head>
 <body>
@@ -119,7 +125,23 @@ jQuery('#dataTables-example').dataTable( {
 });
 });
 </script>
+<script>
+jQuery( document ).ready(function() {
 
+jQuery( "#payment_type" ).change(function() {
+  if(jQuery( "#payment_type" ).val()=="weekly"){
+      jQuery("tr.members-loan-helper").show();
+      jQuery("tr.members-loan-edit-helper").show();
+  }else{
+       jQuery("tr.members-loan-helper").hide();
+       jQuery("tr.members-loan-edit-helper").hide();
+  }
+});
+
+jQuery( "#payment_type" ).trigger('change');
+
+});
+</script>
  
    
 </body>
