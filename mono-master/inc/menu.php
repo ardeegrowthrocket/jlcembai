@@ -37,7 +37,9 @@
                   <li>
                     <a href="index.php?pages=members">Members</a>
                   </li>    
-
+                  <li>
+                    <a href="index.php?pages=system">System Config</a>
+                  </li>
 					</ul>
 				 </li>			
 			<?php

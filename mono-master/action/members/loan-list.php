@@ -22,7 +22,6 @@ foreach($field as $ff){
     display:none;
 }
 </style>
-<h2>Loans</h2>
 <div class="panel panel-default">
    <div class="panel-body">
          <div class="row">
@@ -34,7 +33,7 @@ foreach($field as $ff){
                </div>
             </div>
             <div class="col-md-9">
-               <div class="panel panel-default">
+<!--                <div class="panel panel-default">
                   <div class="panel-body">
                     Search by: <?php echo (implode(", ", $field_data)); ?>
                     <form method=''>
@@ -43,7 +42,7 @@ foreach($field as $ff){
                     <input type='submit' name='search_button' class="btn btn-primary"/>
                     </form>
                   </div>
-               </div>
+               </div> -->
             </div>            
          </div>    
       <div class="table-responsive">
@@ -53,13 +52,14 @@ foreach($field as $ff){
          <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables-example">
             <thead>
                <tr role='row'>
-                  
+                  <th>Description</th>
                   <th>Loan Amount</th>
                   <th>Net Amount</th>
+                  <th>Interest Amount</th>
                   <th>Terms</th>
                   <th>Remarks</th>
                   <th>Interest</th>
-                  <th>Penalty</th>
+<!--                   <th>Penalty</th> -->
                   <th>Action</th>
                </tr>
             </thead>
@@ -68,18 +68,20 @@ foreach($field as $ff){
                   while($row=mysql_fetch_array($q))
                   {
                     $pid = $row['id'];
-                    $roledata = ($row['role'] >= 1 ? 'Administrator' : 'Teller');
+                    $interest_amount = ($row['amount'] * percentget($row['interest']));
                   ?>
                <tr>
+                  <td><?php echo $row['loandesc']; ?></td>
                   <td><?php echo number_format($row['amount'],2); ?></td>
-                  <td><?php echo number_format($row['amount'] + ($row['amount'] * percentget($row['interest'])),2);  ?></td>
+                  <td><?php echo number_format($row['net'],2);  ?></td>
+                  <td><?php echo number_format($interest_amount,2); ?></td>
                   <td><?php echo $row['terms']; ?></td>
                   <td><?php echo $row['remarks']; ?></td>
                   <td><?php echo $row['interest']; ?>%</td>
-                  <td><?php echo $row['penalty']; ?>%</td>
+<!--                   <td><?php echo $row['penalty']; ?>%</td> -->
                   <td>
                      <input onclick="window.location='<?php echo "?pages=".$_GET['pages']."&task=loan-edit&id=$pid&uid={$_GET['id']}"; ?>';" type="button" class="btn btn-primary btn-sm" value="Edit">
-                     <input onclick="window.location='<?php echo "?pages=".$_GET['pages']."&task=delete&id=$pid"; ?>';" type="button" class="btn btn-primary btn-sm" value="Delete">
+                     <input onclick="window.location='<?php echo "?pages=".$_GET['pages']."&task=loan-delete&id=$pid&uid={$_GET['id']}"; ?>';" type="button" class="btn btn-primary btn-sm" value="Delete">
                   </td>
                </tr>
                <?php

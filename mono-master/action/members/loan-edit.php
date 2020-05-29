@@ -66,11 +66,16 @@ $release = array();
 $release['0'] = "No";
 $release['1'] = "Yes";
 
+
+$field[] = array("type"=>"select","value"=>"loandesc","label"=>"Loan Class","option"=>getarrayconfig('loanclass'));
 $field[] = array("type"=>"select","value"=>"loan_type","option"=>array("Collateral"=>"Collateral","Not Collateral"=>"Not Collateral"),"label"=>"Type of Loan");
-$field[] = array("type"=>"number","value"=>"amount");
-$field[] = array("type"=>"number","value"=>"interest","label"=>"Interest (%)");
+$field[] = array("type"=>"number","value"=>"amount","attributes"=>array("onkeyup"=>"autogenloan()"));
+$field[] = array("type"=>"number","value"=>"interest","label"=>"Interest (%)","attributes"=>array("onkeyup"=>"autogenloan()"));
+$field[] = array("type"=>"number","value"=>"interest_amount","label"=>"Interest Amount","attributes"=>array("readonly"=>"readonly"));
+$field[] = array("type"=>"number","value"=>"net","label"=>"Net Amount","attributes"=>array("readonly"=>"readonly"));
 $field[] = array("type"=>"number","value"=>"penalty","label"=>"Penalty Rate (%)");
-$field[] = array("type"=>"select","value"=>"terms","label"=>"Number of Months","option"=>$terms);
+$field[] = array("type"=>"select","value"=>"terms","label"=>"Number of Months","option"=>getarrayconfig('loanterms'));
+
 $field[] = array("type"=>"select","value"=>"payment_type","label"=>"Payment Type","option"=>$ptype);
 $field[] = array("type"=>"select","value"=>"helper","label"=>"What days of week(for weekly payment)","option"=>$week);
 $field[] = array("type"=>"date","value"=>"loan_date","label"=>"Loan Date");
@@ -79,95 +84,178 @@ $field[] = array("type"=>"text","value"=>"remarks");
 $field[] = array("type"=>"select","value"=>"is_release","label"=>"Loan Is Released?","option"=>$release);
 
 
-
-
-var_dump(generatedate($sdata));
-
+$show = 1;
+if($sdata['is_release']){
+   $show = 0;
+   $sdata['is_release'] = "Yes";
+}
 ?>
 <h2>Edit Loan - <?php echo  $sdata['name']; ?></h2>
+
+<?php
+if($show) {
+?>
+<p>Warning: If you click the Loan is release to "Yes" you will not able to change anything and it will create a autommated scheduled payment</p>
+<?php } ?>
 <div class="panel panel-default">
    <div class="panel-body">
       <form method='POST' action='?pages=<?php echo $_GET['pages'];?>'>
 	  <input type='hidden' name='task' value='<?php echo $_GET['task'];?>-save'>
       <input type='hidden' name='user' value='<?php echo $_GET['uid'];?>'>
       <input type='hidden' name='id' value='<?php echo $_GET['id'];?>'>
-         <table width="100%">
-            <?php
-               $is_editable_field = 1;
-               foreach($field as $inputs)
-               {
-
-                                 if($inputs['label']!='')
-                                 {
-                                 $label = $inputs['label'];
-                                 }
-                                 else
-                                 {
-                                 $label = ucwords($inputs['value']);
-                                 }
-               ?>
-
-               <?php
-                     if($inputs['skip']){
-                  ?>
-                     <tr>
-                        <td colspan="2"><hr></td>
-                     </tr>
-                      <tr>
-                        <td colspan="2">
-                           <strong><?php echo $inputs['label']; ?></strong>
-                        </td>
-                     </tr>                    
-                      <tr>
-                        <td colspan="2"><hr></td>
-                     </tr>                    
-                  <?php
-                  continue;
-                  }
-               ?>
-            <tr class='<?php echo $_GET['pages']; ?>-<?php echo $_GET['task']; ?>-<?php echo $inputs['value']; ?>'>
-               <td style="width:180px;" class="key" valign="top" ><label for="accounts_name"><?php echo $label; ?><?php echo $req_fld?>:</label></td>
-               <?php if ( $is_editable_field ) { ?>
-               <td>
-                  <?php
-                     if ($inputs['type']=='select')
-                     {                                                                                               
-                        ?>
-                  <select name="<?php echo $inputs['value']; ?>" id="<?php echo $inputs['value']; ?>" required <?php echo $inputs['attr']; ?>
-                     >
-                     <?php
-                        foreach($inputs['option'] as $key=>$val)
-                        {
-                           ?>
-                     <option <?php if($sdata[$inputs['value']]==$key){echo"selected='selected'";} ?> value='<?php echo $key;?>'><?php echo $val;?></option>
-                     <?php
-                        }
-                        ?>
-                  </select>
-                  <span class="validation-status"></span>
-                  <?php
-                     }
-                     else
-                     {
-                        ?>
-                  <input required <?php echo $inputs['attr']; ?> type="<?php echo $inputs['type']; ?>" name="<?php echo $inputs['value']; ?>" id="<?php echo $inputs['value']; ?>" size="40" maxlength="255" value="<?php echo $sdata[$inputs['value']]; ?>" />
-                  <span class="validation-status"></span>                                    
-                  <?php
-                     }
-                     ?>
-               </td>
-               <?php } else { ?>
-               <td><?php echo $sdata[$inputs['value']]; ?></td>
-               <?php } ?>                                                                                                    
-            </tr>
-            <?php
-               }
-               ?>
-         </table>
+         
+         <?php echo loadform($field,$sdata,$show); ?>
 
          <hr>
-
+         <?php
+            if($show) {
+         ?>
          <center><input class='btn btn-primary btn-lg' type='submit' name='submit' value='Edit Loan'></center>
+         <?php } ?>
       </form>
    </div>
 </div> 
+
+
+
+
+         <?php
+            if(!$show) {
+
+ $query = "SELECT * FROM tbl_schedule WHERE loan_id='{$_GET['id']}'";
+
+ $q = mysql_query($query);
+
+         ?>
+<div class="panel panel-default">
+   <div class="panel-body">
+      <div class="table-responsive">
+
+         
+         <br/>
+         <table class="table table-striped table-bordered table-hover dataTable no-footer">
+            <thead>
+               <tr role='row'>
+                  
+                  <th>Schedule Date</th>
+                  <th>Amount</th>
+                  <th>Savings</th>
+                  <th>Penalty</th>
+                  <th>Actual Date</th>
+                  <th>Total</th>
+                  <th>Remarks</th>
+                  <th>Action</th>
+               </tr>
+            </thead>
+            <tbody class='loaneditbody'>
+               <?php
+                  while($row=mysql_fetch_array($q))
+                  {
+                    $pid = $row['accounts_id'];
+                    $roledata = ($row['role'] >= 1 ? 'Administrator' : 'Teller');
+
+                    $actual = date("F d,Y",strtotime($row['actual']));
+                    $schedule = date("F d, Y",strtotime($row['schedule']));
+
+                    if(empty($row['actual'])){
+                     $actual = " - ";
+                    }
+
+                    $total = number_format($row['payment'] + $row['savings'] + $row['penalty'],2);
+
+
+                    $json_loan = array();
+
+                    $row['schedule'] = $schedule;
+
+                    foreach($row as $kd=>$vd){
+                     $vd = addslashes($vd);
+                     $json_loan[] = "tableloandata-{$kd}='$vd'";
+                    }
+                  ?>
+               <tr id='loandataajax<?php echo $row['id']; ?>' <?php echo implode(" ",$json_loan); ?>>
+                  <td><?php echo $schedule; ?></td>
+                  <td><?php echo number_format($row['payment'],2); ?></td>
+                  <td><?php echo number_format($row['savings'],2); ?></td>
+                  <td><?php echo number_format($row['penalty'],2); ?></td>
+                  <td><?php echo $actual; ?></td>
+                  <td><?php echo $total; ?></td>
+                  <td><?php echo $row['remarks']; ?></td>                                   
+                  <td>
+                    <?php if($row['is_paid']=='no') { ?>
+                     <input onclick="createpayment(<?php echo $row['id']; ?>);" type="button" class="btn btn-primary btn-sm" value="Create Payment">
+                    <?php }  else { echo "Paid"; }?>
+                  </td>
+               </tr>
+               <?php
+                  }
+                  ?>
+            </tbody>
+         </table>
+      </div>
+   </div>
+</div> 
+         <?php } ?>
+
+
+
+<script>
+   function createpayment(data){
+      var ajax = jQuery('#loandataajax'+data);
+      jQuery('#schedule_payment').text(ajax.attr('tableloandata-schedule'));
+      jQuery('#amount_payment').val(ajax.attr('tableloandata-payment'));
+      jQuery('#date_payment').val("<?php echo date("Y-m-d"); ?>");
+      jQuery('#createpayment').trigger('click');
+       jQuery('#schedule_id').val(ajax.attr('tableloandata-id'));
+       jQuery('#savings_payment').val(0);
+       jQuery('#penalty_payment').val(0);
+       
+       
+   }
+
+
+   function processpay(){
+
+
+
+
+
+   }
+</script>
+
+ <button id='createpayment' type="button" style="display:none;" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Create Payment for <span id='schedule_payment'></span></h4>
+        </div>
+        <div class="modal-body">
+          <form id='createpaymentform' method="POST" action="?pages=<?php echo $_GET['pages'];?>">
+         <input type='hidden' name="schedule_id" id="schedule_id">
+         <input type='hidden' name="task" value="processpay">
+         <input type='hidden' name="refer" value="index.php?pages=<?php echo $_GET['pages']; ?>&task=<?php echo $_GET['task']; ?>&id=<?php echo $_GET['id']; ?>&uid=<?php echo $_GET['uid']; ?>">
+         <?php
+            $payment = array();
+            $payment[] = array("type"=>"date","value"=>"date_payment","label"=>"Actual Payment Date");
+            $payment[] = array("type"=>"number","value"=>"amount_payment","label"=>"Amount","attributes"=>array("readonly"=>"readonly"));
+            $payment[] = array("type"=>"number","value"=>"savings_payment","label"=>"Savings");
+            $payment[] = array("type"=>"number","value"=>"penalty_payment","label"=>"Penalty");
+            $payment[] = array("type"=>"textarea","value"=>"remarks_payment","label"=>"Remarks");
+         ?>
+         <?php echo loadform($payment,$sdata); ?>
+       
+        </div>
+        <div class="modal-footer">
+         <input class='btn btn-default' type='submit' name='submit' value='Mark as Paid'>
+         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>

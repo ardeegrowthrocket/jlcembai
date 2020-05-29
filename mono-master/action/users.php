@@ -43,8 +43,7 @@ if($_POST['submit']!='' && $_POST['task']=='delete')
 }
 /*SQL*/
 if($refresh){
-header("HTTP/1.1 301 Moved Permanently");
-header("Location: index.php?pages=".$_REQUEST['pages']);
+moveredirect("index.php?pages=".$_REQUEST['pages']);
 exit();	
 }
 

@@ -44,8 +44,25 @@ if($_POST['submit']!='' && $_POST['task']=='delete')
 
 
 
+if($_POST['submit']!='' && $_POST['task']=='loan-delete-delete')
+{
+	$tbl = "tbl_loan";
+	mysql_query("DELETE FROM $tbl WHERE $primary=".$_POST[$primary]);
+	$_SESSION['noti'] = "Done deleting loan data.";
+	$refresh = 1;
+	moveredirect("index.php?id={$_POST['user']}&task=edit&pages=members");
+	exit();
+}
 
 
+if($_POST['submit']!='' && $_POST['task']=='processpay')
+{
+	$tbl = "tbl_schedule";
+	mysql_query("UPDATE $tbl SET actual='{$_REQUEST['date_payment']}',savings='{$_REQUEST['savings_payment']}',penalty='{$_REQUEST['penalty_payment']}',remarks='{$_REQUEST['remarks_payment']}',is_paid='yes' WHERE id ='{$_REQUEST['schedule_id']}'");
+	$_SESSION['noti'] = "Done marking the payment.";
+	moveredirect($_POST['refer']."#loandataajax{$_REQUEST['schedule_id']}");
+	exit();
+}
 
 
 if($_POST['submit']!='' && $_POST['task']=='loan-save')
@@ -72,15 +89,55 @@ if($_POST['submit']!='' && $_POST['task']=='loan-save')
 
 	$_POST['penalty_fee'] = ($_POST['amount'] * percentget($_POST['penalty'])) / $_POST['loop_number'];
 
-	$_POST['loop_amount'] = $_POST['amount'] / $_POST['loop_number'];
+	$_POST['loop_amount'] = $_POST['net'] / $_POST['loop_number'];
 
-
+	$_POST['interest_amount'] = ($_POST['amount'] * percentget($_POST['interest']));
+	
 	$fields = formquery($_POST);
 	$_SESSION['noti'] = "Done adding loan data.";
 	$refresh = 1;
-	mysql_query("INSERT INTO $tbl SET $fields");
-	header("HTTP/1.1 301 Moved Permanently");
-	header("Location: index.php?id={$_POST['user']}&task=edit&pages=".$_REQUEST['pages']);
+	$sqli = mysql_query_insert("INSERT INTO $tbl SET $fields");
+
+
+
+
+
+
+	if($_POST['is_release']){
+
+	
+	$date = generatedate($_POST);
+
+
+
+
+	foreach($date as $s){
+
+		$array = array();
+
+		$array['schedule'] = $s;
+		$array['payment'] = $_POST['loop_amount'];
+		$array['user_id'] = $_POST['user'];
+		$array['loan_id'] = $sqli;
+		$fieldsv2 = formquery($array);
+		mysql_query("INSERT INTO tbl_schedule SET $fieldsv2");
+
+	}
+
+
+
+
+	}
+
+
+
+	moveredirect("index.php?id={$sqli}&uid={$_POST['user']}&task=loan-edit&pages=".$_REQUEST['pages']);
+	#moveredirect("index.php?id={$_POST['user']}&task=edit&pages=".$_REQUEST['pages']);
+
+
+
+
+
 	exit();	
 }
 
@@ -108,15 +165,55 @@ if($_POST['submit']!='' && $_POST['task']=='loan-edit-save')
 
 	$_POST['penalty_fee'] = ($_POST['amount'] * percentget($_POST['penalty'])) / $_POST['loop_number'];
 
-	$_POST['loop_amount'] = $_POST['amount'] / $_POST['loop_number'];
+	$_POST['loop_amount'] = $_POST['net'] / $_POST['loop_number'];
 
-
+	$_POST['interest_amount'] = ($_POST['amount'] * percentget($_POST['interest']));
 	$fields = formquery($_POST);
 	$_SESSION['noti'] = "Done adding loan data.";
 	$refresh = 1;
+
+
+
+
+
+
+
+	if($_POST['is_release']){
+
+	
+	$date = generatedate($_POST);
+
+
+	
+
+	foreach($date as $s){
+
+		$array = array();
+
+		$array['schedule'] = $s;
+		$array['payment'] = $_POST['loop_amount'];
+		$array['user_id'] = $_POST['user'];
+		$array['loan_id'] = $_POST['id'];
+		$fieldsv2 = formquery($array);
+		mysql_query("INSERT INTO tbl_schedule SET $fieldsv2");
+
+	}
+
+
+
+
+	}
+
+
+
+
+
+
+
+
+
 	mysql_query("UPDATE $tbl SET $fields WHERE $primary=".$_POST[$primary]);
-	header("HTTP/1.1 301 Moved Permanently");
-	header("Location: index.php?id={$_POST['id']}&uid={$_POST['user']}&task=loan-edit&pages=".$_REQUEST['pages']);
+	moveredirect("index.php?id={$_POST['id']}&uid={$_POST['user']}&task=loan-edit&pages=".$_REQUEST['pages']);
 	exit();	
 }
 
@@ -134,8 +231,7 @@ if($_POST['submit']!='' && $_POST['task']=='loan-edit-save')
 
 /*SQL*/
 if($refresh){
-header("HTTP/1.1 301 Moved Permanently");
-header("Location: index.php?pages=".$_REQUEST['pages']);
+moveredirect("index.php?pages=".$_REQUEST['pages']);
 exit();	
 }
 
@@ -175,5 +271,9 @@ if($_GET['task']=='loan-edit')
 	echo "<a href='?id={$_GET['uid']}&task=edit&pages=".$_GET['pages']."'>Go back</a>";
 	include($_GET['pages']."/loan-edit.php");
 }
-
+if($_GET['task']=='loan-delete')
+{
+	echo "<a href='?id={$_GET['uid']}&task=edit&pages=".$_GET['pages']."'>Go back</a>";
+	include($_GET['pages']."/loan-delete.php");
+}
 ?>

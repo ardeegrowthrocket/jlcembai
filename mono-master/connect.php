@@ -1,5 +1,10 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
+
+
+function moveredirect($url){
+  echo "<script> window.location = '{$url}'; </script>";
+}
 function mysql_query($q){
 
 		$mysqli = new mysqli("localhost","root","","jlc");
@@ -20,6 +25,32 @@ function mysql_query($q){
 
 		return $result;
 }
+
+
+
+function mysql_query_insert($q){
+
+    $mysqli = new mysqli("localhost","root","","jlc");
+
+    // Check connection
+    if ($mysqli -> connect_errno) {
+      echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
+      exit();
+    }
+    // Perform query
+    if ($result = $mysqli -> query($q)) {
+      // Free result set
+      
+    }
+
+    $id = $mysqli->insert_id;
+
+    $mysqli -> close();
+
+    return $id;
+}
+
+
 
 function mysql_num_rows($result){
 	return mysqli_num_rows($result);
@@ -160,4 +191,236 @@ for ($i = $for_start; $i <= $for_end; $i = strtotime('+1 week', $i)) {
 
 	return $payment;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            function loadform($field,$sdata = array(),$is_editable_field = 1)
+            {
+               $return = '<table class="formgenerator" width="100%">';
+               foreach($field as $inputs)
+               {
+
+
+               					if($inputs['attributes'])
+               					{
+
+	               					$addedattr = array();
+
+	               					foreach($inputs['attributes'] as $keya=>$vala){
+
+	               						$addedattr[] = "$keya=\"$vala\"";
+
+
+	               					}
+
+	               					$inputs['attr'] = implode(" ", $addedattr);
+               		
+
+               					}
+
+                                 if($inputs['label']!='')
+                                 {
+                                 $label = $inputs['label'];
+                                 }
+                                 else
+                                 {
+                                 $label = ucwords($inputs['value']);
+                                 }
+
+                     if($inputs['skip']){
+
+                     $return .= "<tr>
+                        <td colspan=\"2\"><hr></td>
+                     </tr>
+                      <tr>
+                        <td colspan=\"2\">
+                           <strong>{$inputs['label']}</strong>
+                        </td>
+                     </tr>                    
+                      <tr>
+                        <td colspan=\"2\"><hr></td>
+                     </tr>";                    
+         
+                  continue;
+                  }
+
+                  $return .= "<tr class=\"{$_GET['pages']}-{$_GET['task']}-{$inputs['value']}\">";
+
+                  $return .= "<td style=\"width:180px;\" class=\"key\" valign=\"top\" >
+                  <label for=\"accounts_name\">{$label}{$req_fld}:</label><br/></td>";
+     				 if ( $is_editable_field ) { 
+                  $return .= "<td>";
+                     if ($inputs['type']=='select')
+                     {                                                                                               
+                      
+                  $return .= "<select name=\"{$inputs['value']}\" id=\"{$inputs['value']}\" required {$inputs['attr']}>";
+
+                        foreach($inputs['option'] as $key=>$val)
+                        {
+                        	$tselect = '';
+                        	if($sdata[$inputs['value']]==$key){ $tselect = "selected='selected'"; }
+                        	$return .= "<option {$tselect} value='{$key}'>{$val}</option>";
+
+                        }
+
+                        $return .= "</select><span class=\"validation-status\"></span>";
+
+       
+                     }
+
+                     else if($inputs['type']=='textarea'){
+                      $sdata[$inputs['value']] = htmlentities($sdata[$inputs['value']]);
+                     	$return .= "<textarea {$inputs['attr']} required name=\"{$inputs['value']}\" id=\"{$inputs['value']}\" name=''>{$sdata[$inputs['value']]}</textarea>";
+
+                     }
+
+                     else if($inputs['type']=='editor'){
+                      $sdata[$inputs['value']] = htmlentities($sdata[$inputs['value']]);
+                      $return .= "<textarea class='editor' {$inputs['attr']} required name=\"{$inputs['value']}\" id=\"{$inputs['value']}\" name=''>{$sdata[$inputs['value']]}</textarea>";
+
+                     }
+
+
+                     else
+                     {
+					
+
+						$return .= "<input required {$inputs['attr']} type=\"{$inputs['type']}\" name=\"{$inputs['value']}\" id=\"{$inputs['value']}\" size=\"40\" maxlength=\"255\" value=\"{$sdata[$inputs['value']]}\" />";
+
+						$return .= "<span class=\"validation-status\"></span>";
+
+                     }
+                      $return .= "<td>";
+    
+           		} else {  
+           			$return .= "<td>{$sdata[$inputs['value']]}</td>";
+           		} 
+                $return .= "</tr>";
+               }
+           		$return .= "</table>";
+
+           		return $return;
+           		}
+
+
+
+
+              function multiformconfig($code,$name = NULL,$array = array()){
+
+
+                $arrayconvert = json_decode($array,true);
+
+                $return = "";
+
+                if(empty($name)){
+                  $name = ucwords($code);
+                }
+
+         $return.= "<hr>
+
+         <h3>$name</h3>
+         <table id='multi-{$code}' class='table table-striped table-bordered table-hover dataTable no-footer'>
+            <thead><tr role='row'>
+                  <th>Label</th>
+                  <th>Value</th>
+                  <th>Action</th>
+            </tr>
+          </thead> <tbody class='tbodyconfig{$code}'>
+
+
+
+          ";
+
+
+          if(empty($arrayconvert)){
+
+
+              for($i=1;$i<=5;$i++){
+                $return .= "<tr class='tr-{$code}-$i'>
+              <td><input type='text' name='{$code}[$i][label]'></td>
+              <td><input type='text' name='{$code}[$i][value]'></td>
+              <td><a onclick=\"removeme('tr-{$code}-$i')\" href='javascript:void(0)'>Remove</a></td>
+            </tr>";
+              }
+
+          }else{
+
+
+            foreach($arrayconvert as $k=>$v){
+
+              $labela = addslashes($arrayconvert[$k]['label']);
+              $valuea = addslashes($arrayconvert[$k]['value']);
+                $return .= "<tr class='tr-{$code}-$k'>
+              <td><input type='text' name='{$code}[$k][label]' value='{$labela}'></td>
+              <td><input type='text' name='{$code}[$k][value]' value='{$valuea}'></td>
+              <td><a onclick=\"removeme('tr-{$code}-$k')\" href='javascript:void(0)'>Remove</a></td>
+            </tr>";
+
+
+
+            }
+
+
+
+          }
+         
+
+         
+
+
+          $return .= " </tbody>
+          <tfoot>
+ <tr><td colspan='3'><a onclick=\"addtable('{$code}')\" href='javascript:void(0)'>Add more field</a></td></tr>         
+          </tfoot>
+          </table>
+          <br><br><hr>";
+
+          return $return;
+
+
+              }
+
+
+
+              function getarrayconfig($code){
+
+                $q = mysql_query("SELECT value FROM `tbl_system` WHERE code='$code'");
+
+                $a = mysql_fetch_array($q);
+                $return = array();
+
+
+                if(!empty($a['value'])){
+
+                $data =  json_decode($a['value'],true);
+
+                foreach($data as $k=>$v){
+
+                    $return[$data[$k]['value']] = $data[$k]['label'];
+
+
+                }
+
+
+                }
+                
+
+                return $return;
+              }
+
+
 ?>
