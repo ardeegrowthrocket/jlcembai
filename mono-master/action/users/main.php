@@ -7,7 +7,6 @@
  $query = "SELECT * FROM tbl_accounts $where $limit";
 
  $q = mysql_query($query);
- $options = getpackagelist();
  $pagecount = getpagecount($total,10);
 
 

@@ -7,7 +7,6 @@
  $query = "SELECT * FROM tbl_loan $where $limit";
 
  $q = mysql_query($query);
- $options = getpackagelist();
  $pagecount = getpagecount($total,10);
 
 
@@ -81,7 +80,9 @@ foreach($field as $ff){
 <!--                   <td><?php echo $row['penalty']; ?>%</td> -->
                   <td>
                      <input onclick="window.location='<?php echo "?pages=".$_GET['pages']."&task=loan-edit&id=$pid&uid={$_GET['id']}"; ?>';" type="button" class="btn btn-primary btn-sm" value="Edit">
+                     <?php  if($_SESSION['role']==1) { ?>
                      <input onclick="window.location='<?php echo "?pages=".$_GET['pages']."&task=loan-delete&id=$pid&uid={$_GET['id']}"; ?>';" type="button" class="btn btn-primary btn-sm" value="Delete">
+                     <?php } ?>
                   </td>
                </tr>
                <?php

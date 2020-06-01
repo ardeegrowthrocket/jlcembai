@@ -42,14 +42,14 @@ $field[] = array("skip"=>"text","label"=>"CUSTOM LABEL");
 $field[] = array("type"=>"text","value"=>"custom_label","label"=>"Label");
 
 ?>
-<h2>Members</h2>
+<h2>Delete Member - <?php echo $sdata['name'];?> </h2>
 <div class="panel panel-default">
    <div class="panel-body">
       <form method='POST' action='?pages=<?php echo $_GET['pages'];?>'>
      <input type='hidden' name='task' value='<?php echo $_GET['task'];?>'>
      <input type='hidden' name='<?php echo $primary; ?>' value='<?php echo $sdata[$primary];?>'>
          
-         <?php echo loadform($field,$sdata); ?>
+         <?php echo loadform($field,$sdata,0); ?>
 
          <hr>
 

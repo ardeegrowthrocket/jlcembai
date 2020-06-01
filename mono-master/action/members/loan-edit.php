@@ -184,7 +184,17 @@ if($show) {
                   <td>
                     <?php if($row['is_paid']=='no') { ?>
                      <input onclick="createpayment(<?php echo $row['id']; ?>);" type="button" class="btn btn-primary btn-sm" value="Create Payment">
-                    <?php }  else { echo "Paid"; }?>
+                    <?php }  
+                    else 
+                    { 
+                      echo "Paid <hr> <strong>Encoded by: {$row['createdby']}</strong>"; 
+                      if($_SESSION['role']==1){
+                      ?>
+                          <input onclick="createpayment(<?php echo $row['id']; ?>);" type="button" class="btn btn-primary btn-sm" value="Edit Payment">
+                      <?php
+                      }
+                    }
+                    ?>
                   </td>
                </tr>
                <?php
@@ -207,8 +217,8 @@ if($show) {
       jQuery('#date_payment').val("<?php echo date("Y-m-d"); ?>");
       jQuery('#createpayment').trigger('click');
        jQuery('#schedule_id').val(ajax.attr('tableloandata-id'));
-       jQuery('#savings_payment').val(0);
-       jQuery('#penalty_payment').val(0);
+       jQuery('#savings_payment').val(ajax.attr('tableloandata-savings'));
+       jQuery('#penalty_payment').val(ajax.attr('tableloandata-penalty'));
        
        
    }
@@ -245,7 +255,19 @@ if($show) {
             $payment[] = array("type"=>"date","value"=>"date_payment","label"=>"Actual Payment Date");
             $payment[] = array("type"=>"number","value"=>"amount_payment","label"=>"Amount","attributes"=>array("readonly"=>"readonly"));
             $payment[] = array("type"=>"number","value"=>"savings_payment","label"=>"Savings");
-            $payment[] = array("type"=>"number","value"=>"penalty_payment","label"=>"Penalty");
+
+            $penalty_type = "hidden";
+
+            if($_SESSION['role']==1) {
+              $penalty_type = "number";
+              $payment[] = array("type"=>$penalty_type,"value"=>"penalty_payment","label"=>"Penalty");
+
+
+            }
+
+
+
+
             $payment[] = array("type"=>"textarea","value"=>"remarks_payment","label"=>"Remarks");
          ?>
          <?php echo loadform($payment,$sdata); ?>

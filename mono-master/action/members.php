@@ -10,6 +10,7 @@ if($_POST['submit']!='' && $_POST['task']=='add')
 {
 	unset($_POST['submit']);
 	unset($_POST['task']);
+	$_POST['createdby'] = $_SESSION['username'];
 	$fields = formquery($_POST);
 	mysql_query("INSERT INTO $tbl SET $fields");
 	#setcookie('noti', "Done adding data",60, "/");
@@ -48,17 +49,121 @@ if($_POST['submit']!='' && $_POST['task']=='loan-delete-delete')
 {
 	$tbl = "tbl_loan";
 	mysql_query("DELETE FROM $tbl WHERE $primary=".$_POST[$primary]);
+
+
+	mysql_query("DELETE FROM tbl_schedule WHERE loan_id=".$_POST[$primary]);
+
+	mysql_query("DELETE FROM tbl_expenses WHERE loan_id=".$_POST[$primary]);
+
+
+
+
 	$_SESSION['noti'] = "Done deleting loan data.";
 	$refresh = 1;
 	moveredirect("index.php?id={$_POST['user']}&task=edit&pages=members");
 	exit();
 }
 
+if($_POST['submit']!='' && $_POST['task']=='processsavings')
+{
+	$tbl = "tbl_passbook";
+	$sqli = mysql_query_insert("INSERT INTO $tbl SET createdby='{$_SESSION['username']}',actual='{$_REQUEST['actual']}',amount='{$_REQUEST['amount']}',remarks='{$_REQUEST['remarks_payment']}',ptype='{$_REQUEST['ptype']}',user='{$_REQUEST['id']}'");
+
+
+	$user = mysql_fetch_array(mysql_query("SELECT name FROM tbl_members WHERE id='{$_REQUEST['id']}'"));
+	$name = $user['name'];
+
+	$current = date("Y-m-d");
+	$amt = number_format($_POST['amount'],2);
+	$remarks = "Withdrawal Release {$amt} for $name - $current";
+
+	if($_REQUEST['ptype']!='savings'){
+
+	mysql_query("INSERT INTO tbl_expenses SET amount='{$_REQUEST['amount']}',remarks='{$remarks}',passbook_id='{$sqli}',actual='{$current}',createdby='{$_SESSION['username']}'");
+
+	}	
+
+
+
+	$_SESSION['noti'] = "Done creating savings/withdrawal.";
+	moveredirect($_POST['refer'].'#tabs-3');
+	exit();
+
+
+}
+
+
+if($_POST['submit']!='' && $_POST['task']=='processsavings-edit')
+{
+
+	$tbl = "tbl_passbook";
+	mysql_query("UPDATE $tbl SET createdby='{$_SESSION['username']}',actual='{$_REQUEST['actual-edit']}',amount='{$_REQUEST['amount-edit']}',remarks='{$_REQUEST['remarks_payment-edit']}',ptype='{$_REQUEST['ptype-edit']}' WHERE id='{$_REQUEST['editid']}'");
+
+
+
+	$userp = mysql_fetch_array(mysql_query("SELECT user FROM tbl_passbook WHERE id='{$_REQUEST['editid']}'"));
+
+
+	$user = mysql_fetch_array(mysql_query("SELECT name FROM tbl_members WHERE id='{$userp['user']}'"));
+	$name = $user['name'];
+
+
+	$current = date("Y-m-d");
+	$amt = number_format($_POST['amount-edit'],2);
+	$remarks = "Withdrawal Release {$amt} for $name - $current";
+
+	if($_REQUEST['ptype-edit']!='savings'){
+	
+	mysql_query("DELETE FROM tbl_expenses WHERE passbook_id = '{$_REQUEST['editid']}'");
+
+	mysql_query("INSERT INTO tbl_expenses SET amount='{$_REQUEST['amount-edit']}',remarks='{$remarks}',passbook_id='{$_REQUEST['editid']}',actual='{$current}',createdby='{$_SESSION['username']}'");
+
+
+}
+
+
+
+
+
+	$_SESSION['noti'] = "Done creating savings/withdrawal.";
+	moveredirect($_POST['refer'].'#tabs-3');
+	exit();
+
+
+}
+
 
 if($_POST['submit']!='' && $_POST['task']=='processpay')
 {
 	$tbl = "tbl_schedule";
-	mysql_query("UPDATE $tbl SET actual='{$_REQUEST['date_payment']}',savings='{$_REQUEST['savings_payment']}',penalty='{$_REQUEST['penalty_payment']}',remarks='{$_REQUEST['remarks_payment']}',is_paid='yes' WHERE id ='{$_REQUEST['schedule_id']}'");
+
+	if(empty($_REQUEST['penalty_payment'])){
+		$_REQUEST['penalty_payment'] = 0;
+	}
+
+   $query  = mysql_query("SELECT * FROM tbl_schedule WHERE id ='{$_REQUEST['schedule_id']}'");
+   $row=mysql_fetch_assoc($query);
+
+   if($row['is_paid']!='yes'){
+
+   	$loan  = mysql_query("UPDATE tbl_loan SET loop_paid = loop_paid + 1 WHERE id = {$row['loan_id']}");
+
+   }
+
+
+   	if(!empty($_REQUEST['savings_payment'])){
+   		mysql_query("DELETE FROM tbl_passbook WHERE schedule_id ='{$_REQUEST['schedule_id']}'");
+   		mysql_query("INSERT INTO tbl_passbook SET amount='{$_REQUEST['savings_payment']}',actual='{$_REQUEST['date_payment']}',ptype='savings',schedule_id ='{$_REQUEST['schedule_id']}',remarks='{$_REQUEST['remarks_payment']}',user='{$row['user_id']}',createdby='{$_SESSION['username']}'");
+	}
+
+
+
+
+
+
+	mysql_query("UPDATE $tbl SET createdby='{$_SESSION['username']}',actual='{$_REQUEST['date_payment']}',savings='{$_REQUEST['savings_payment']}',penalty='{$_REQUEST['penalty_payment']}',remarks='{$_REQUEST['remarks_payment']}',is_paid='yes' WHERE id ='{$_REQUEST['schedule_id']}'");
+
+
 	$_SESSION['noti'] = "Done marking the payment.";
 	moveredirect($_POST['refer']."#loandataajax{$_REQUEST['schedule_id']}");
 	exit();
@@ -94,6 +199,7 @@ if($_POST['submit']!='' && $_POST['task']=='loan-save')
 	$_POST['interest_amount'] = ($_POST['amount'] * percentget($_POST['interest']));
 	
 	$fields = formquery($_POST);
+	$_POST['createdby'] = $_SESSION['username'];
 	$_SESSION['noti'] = "Done adding loan data.";
 	$refresh = 1;
 	$sqli = mysql_query_insert("INSERT INTO $tbl SET $fields");
@@ -105,6 +211,17 @@ if($_POST['submit']!='' && $_POST['task']=='loan-save')
 
 	if($_POST['is_release']){
 
+
+	$user = mysql_fetch_array(mysql_query("SELECT name FROM tbl_members WHERE id='{$_POST['user']}'"));
+	$name = $user['name'];
+
+	$current = date("Y-m-d");
+	$amt = number_format($_POST['amount'],2);
+	$remarks = "Loan Release {$amt} for $name - $current";
+
+
+
+	mysql_query("INSERT INTO tbl_expenses SET amount='{$_REQUEST['amount']}',remarks='{$remarks}',loan_id='{$sqli}',actual='{$current}',createdby='{$_SESSION['username']}'");
 	
 	$date = generatedate($_POST);
 
@@ -180,7 +297,19 @@ if($_POST['submit']!='' && $_POST['task']=='loan-edit-save')
 
 	if($_POST['is_release']){
 
+
+	$user = mysql_fetch_array(mysql_query("SELECT name FROM tbl_members WHERE id='{$_POST['user']}'"));
+	$name = $user['name'];
+
+	$current = date("Y-m-d");
+	$amt = number_format($_POST['amount'],2);
+	$remarks = "Loan Release {$amt} for $name - $current";
+
 	
+	mysql_query("INSERT INTO tbl_expenses SET amount='{$_REQUEST['amount']}',remarks='{$remarks}',loan_id='{$_POST['id']}',actual='{$current}',createdby='{$_SESSION['username']}'");
+
+
+
 	$date = generatedate($_POST);
 
 

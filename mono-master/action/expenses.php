@@ -2,7 +2,7 @@
 session_start();
 require_once("./connect.php");
 require_once("./function.php");
-$tbl = "tbl_accounts";
+$tbl = "tbl_expenses";
 $primary = "accounts_id";
 /*SQL*/
 $refresh = 0;

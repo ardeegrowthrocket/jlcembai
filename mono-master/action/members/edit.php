@@ -72,7 +72,7 @@ $field[] = array("type"=>"text","value"=>"custom_label","label"=>"Label");
       <?php require("./action/members/loan-list.php"); ?>
   </div>
   <div id="tabs-3">
-      -
+      <?php require("./action/members/passbook.php"); ?>
   </div>
   <div id="tabs-4">
       -
