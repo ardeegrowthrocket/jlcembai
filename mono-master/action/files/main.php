@@ -1,33 +1,10 @@
 ﻿<?php
- $field = array("amount","remarks");
+ $field = array("filename","remarks");
  $where = getwheresearch($field);
- $total = countquery("SELECT id FROM tbl_expenses");
-
- $datefield = "actual";
-
- if($_GET['date1'] != '' && $_GET['date2'] != ''){
-
-    if(empty($where)){
-
-      $where = "WHERE $datefield BETWEEN '{$_GET['date1']}' and '{$_GET['date2']}'";
-    }else{
-
-      $where .= "AND $datefield BETWEEN '{$_GET['date1']}' and '{$_GET['date2']}'";
-    }
-
- }
-
- #echo $where;
-
+ $total = countquery("SELECT id FROM tbl_files");
  //primary query
- $limit = getlimit(1000,$_GET['p']);
-
-
-
-
-
-
- $query = "SELECT * FROM tbl_expenses $where ORDER by actual ASC $limit";
+ $limit = getlimit(10,$_GET['p']);
+ $query = "SELECT * FROM tbl_files $where $limit";
 
  $q = mysql_query($query);
  $pagecount = getpagecount($total,10);
@@ -44,7 +21,7 @@ foreach($field as $ff){
     display:none;
 }
 </style>
-<h2>Expenses</h2>
+<h2>Files</h2>
 <div class="panel panel-default">
    <div class="panel-body">
          <div class="row">
@@ -59,30 +36,8 @@ foreach($field as $ff){
                <div class="panel panel-default">
                   <div class="panel-body">
                     Search by: <?php echo (implode(", ", $field_data)); ?>
-
-
                     <form method=''>
-                    <table>
-                      <tr>
-                        <td>Search Keyword:</td>
-                        <td><input type='text' value='<?php echo $_GET['search']; ?>' name='search'></td>
-                      </tr>
-
-
-                      <tr>
-                        <td>From:</td>
-                        <td><input type='date' value='<?php echo $_GET['date1']; ?>' name='date1'></td>
-                      </tr>                   
-                      <tr>
-                        <td>To:</td>
-                        <td><input type='date' value='<?php echo $_GET['date2']; ?>' name='date2'></td>
-                      </tr>    
-
-
-                    </table>
-                    <?php if($_GET['search_button']) {  ?>
-                      <a href='index.php?pages=<?php echo $_GET['pages'];?>'> Clear Search </a><br/>
-                    <?php } ?>
+                    <input type='text' value='<?php echo $_GET['search']; ?>' name='search'>
                     <input type='hidden' name='pages' value='<?php echo $_GET['pages'];?>'>
                     <input type='submit' name='search_button' class="btn btn-primary"/>
                     </form>
@@ -97,11 +52,9 @@ foreach($field as $ff){
          <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables-example">
             <thead>
                <tr role='row'>
-                  <th>Remarks</th>
-                  <th>Amount</th>
                   
-                  <th>C/O</th>
-                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Filename</th>
                   <th>Action</th>
                </tr>
             </thead>
@@ -110,20 +63,15 @@ foreach($field as $ff){
                   while($row=mysql_fetch_array($q))
                   {
                     $pid = $row['id'];
+ 
                   ?>
                <tr>
                   <td><?php echo $row['remarks']; ?></td>
-                  <td><?php echo number_format($row['amount'],2); ?></td>
-                  
-                  <td><?php echo $row['createdby']; ?></td>
-                  <td><?php echo date("Y-m-d",strtotime($row['actual'])); ?></td>
+                  <td><?php echo $row['filename']; ?></td>
                   <td>
-                    <?php if(empty($row['loan_id']) && empty($row['passbook_id']) && $_SESSION['role']==1) { ?>
+                    <input onclick="window.location='<?php echo $row['link']; ?>';" type="button" class="btn btn-primary btn-sm" value="Download">
                      <input onclick="window.location='<?php echo "?pages=".$_GET['pages']."&task=edit&id=$pid"; ?>';" type="button" class="btn btn-primary btn-sm" value="Edit">
                      <input onclick="window.location='<?php echo "?pages=".$_GET['pages']."&task=delete&id=$pid"; ?>';" type="button" class="btn btn-primary btn-sm" value="Delete">
-                   <?php }  else {
-                      echo " - ";
-                   } ?>
                   </td>
                </tr>
                <?php

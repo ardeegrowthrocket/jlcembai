@@ -50,7 +50,7 @@ $field[] = array("type"=>"text","value"=>"custom_label","label"=>"Label");
     <li><a href="#tabs-1">Member Information</a></li>
     <li><a href="#tabs-2">Loans Information</a></li>
     <li><a href="#tabs-3">Savings Passbook</a></li>
-    <li><a href="#tabs-3">Mutual Fund / Life Insurance</a></li>
+    <li><a href="#tabs-4">Mutual Fund / Life Insurance</a></li>
   </ul>
   <div id="tabs-1">
         <div class="panel panel-default">
@@ -75,6 +75,6 @@ $field[] = array("type"=>"text","value"=>"custom_label","label"=>"Label");
       <?php require("./action/members/passbook.php"); ?>
   </div>
   <div id="tabs-4">
-      -
+      <?php require("./action/members/mutual-list.php"); ?>
   </div>
 </div>

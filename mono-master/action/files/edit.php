@@ -1,7 +1,7 @@
 ﻿<?php
 $primary = "id";
 $pid = $_GET['id'];
-$tbl = "tbl_expenses";
+$tbl = "tbl_files";
 $query  = mysql_query("SELECT * FROM $tbl WHERE $primary='$pid'");
 while($row=mysql_fetch_assoc($query))
 {
@@ -10,19 +10,13 @@ while($row=mysql_fetch_assoc($query))
 		 $sdata[$key] = $val;
 	}
 }
-
-$sdata['actual'] = date("Y-m-d",strtotime($sdata['actual']));
-
-
-$field[] = array("type"=>"date","value"=>"actual","label"=>"Date");
-$field[] = array("type"=>"number","value"=>"amount","label"=>"Amount");
-$field[] = array("type"=>"textarea","value"=>"remarks","label"=>"Remarks");
-
+$field[] = array("type"=>"text","value"=>"remarks","label"=>"File Description");
+$field[] = array("type"=>"file","value"=>"filename","label"=>"File");
 ?>
-<h2>Edit Expenses - <?php echo $sdata['remarks']; ?> - <?php echo $sdata['amount']; ?></h2>
+<h2>Edit File - <?php echo $sdata['remarks']; ?></h2>
 <div class="panel panel-default">
    <div class="panel-body">
-      <form method='POST' action='?pages=<?php echo $_GET['pages'];?>'>
+      <form method='POST' action='?pages=<?php echo $_GET['pages'];?>' enctype="multipart/form-data">
 	  <input type='hidden' name='task' value='<?php echo $_GET['task'];?>'>
 	  <input type='hidden' name='<?php echo $primary; ?>' value='<?php echo $sdata[$primary];?>'>
          <?php echo loadform($field,$sdata); ?>

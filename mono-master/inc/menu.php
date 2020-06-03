@@ -44,6 +44,10 @@
                   </li>
 
                   <li>
+                    <a href="index.php?pages=files">Files</a>
+                  </li>
+
+                  <li>
                     <a href="index.php?pages=system">System Config</a>
                   </li>
 					</ul>

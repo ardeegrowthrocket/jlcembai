@@ -170,6 +170,49 @@ if($_POST['submit']!='' && $_POST['task']=='processpay')
 }
 
 
+
+
+
+
+
+if($_POST['submit']!='' && $_POST['task']=='processpaymutual')
+{
+	$tbl = "tbl_schedule_mutual";
+
+	if(empty($_REQUEST['penalty_payment'])){
+		$_REQUEST['penalty_payment'] = 0;
+	}
+
+   $query  = mysql_query("SELECT * FROM tbl_schedule WHERE id ='{$_REQUEST['schedule_id']}'");
+   $row=mysql_fetch_assoc($query);
+
+   if($row['is_paid']!='yes'){
+
+   	$loan  = mysql_query("UPDATE tbl_mutual SET loop_paid = loop_paid + 1 WHERE id = {$row['loan_id']}");
+
+   }
+   $_REQUEST['savings_payment'] = 0;
+
+
+	mysql_query("UPDATE $tbl SET createdby='{$_SESSION['username']}',actual='{$_REQUEST['date_payment']}',savings='{$_REQUEST['savings_payment']}',penalty='{$_REQUEST['penalty_payment']}',remarks='{$_REQUEST['remarks_payment']}',is_paid='yes' WHERE id ='{$_REQUEST['schedule_id']}'");
+
+
+	$_SESSION['noti'] = "Done marking the payment.";
+	moveredirect($_POST['refer']."#loandataajax{$_REQUEST['schedule_id']}");
+	exit();
+}
+
+
+
+
+
+
+
+
+
+
+
+
 if($_POST['submit']!='' && $_POST['task']=='loan-save')
 {
 	unset($_POST['submit']);
@@ -354,6 +397,93 @@ if($_POST['submit']!='' && $_POST['task']=='loan-edit-save')
 
 
 
+if($_POST['submit']!='' && $_POST['task']=='mutual-save')
+{
+	unset($_POST['submit']);
+	unset($_POST['task']);
+	$tbl = "tbl_mutual";
+	#$_POST['loan_date'] = $_POST['loan_date']." 00:00:00";
+	$_POST['loan_start'] = $_POST['loan_start']." 00:00:00";
+
+	$_POST['net'] = $_POST['amount'] + ($_POST['amount'] * percentget($_POST['interest']));
+	if($_POST['payment_type']=='weekly'){
+		$_POST['loop_number'] =  ($_POST['terms'] * 4);
+	}
+	if($_POST['payment_type']=='monthly'){
+		$_POST['loop_number'] =  ($_POST['terms'] * 1);
+	}
+	if($_POST['payment_type']=='cutoff'){
+		$_POST['loop_number'] =  ($_POST['terms'] * 2);
+	}
+
+
+	$_POST['net'] = $_POST['amount'] * $_POST['loop_number'];
+
+	$_POST['penalty_fee'] = 0;
+	$_POST['penalty'] = 0;
+
+	$_POST['loop_amount'] = $_POST['amount'];
+
+	$_POST['interest_amount'] = $_POST['amount'];
+	
+	$fields = formquery($_POST);
+	$_POST['createdby'] = $_SESSION['username'];
+	$_SESSION['noti'] = "Done adding life insurance data.";
+	$refresh = 1;
+	$sqli = mysql_query_insert("INSERT INTO $tbl SET $fields");
+
+
+
+
+
+	if($_POST['is_release']){
+
+
+	$user = mysql_fetch_array(mysql_query("SELECT name FROM tbl_members WHERE id='{$_POST['user']}'"));
+	$name = $user['name'];
+
+	$current = date("Y-m-d");
+	$amt = number_format($_POST['amount'],2);
+	$remarks = "Loan Release {$amt} for $name - $current";
+	$date = generatedate($_POST);
+	foreach($date as $s){
+
+		$array = array();
+
+		$array['schedule'] = $s;
+		$array['payment'] = $_POST['loop_amount'];
+		$array['user_id'] = $_POST['user'];
+		$array['loan_id'] = $sqli;
+		$fieldsv2 = formquery($array);
+		mysql_query("INSERT INTO tbl_schedule_mutual SET $fieldsv2");
+
+	}
+
+
+
+
+	}
+
+
+
+	moveredirect("index.php?id={$sqli}&uid={$_POST['user']}&task=loan-edit&pages=".$_REQUEST['pages']);
+	#moveredirect("index.php?id={$_POST['user']}&task=edit&pages=".$_REQUEST['pages']);
+
+
+
+
+
+	exit();	
+}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -405,4 +535,26 @@ if($_GET['task']=='loan-delete')
 	echo "<a href='?id={$_GET['uid']}&task=edit&pages=".$_GET['pages']."'>Go back</a>";
 	include($_GET['pages']."/loan-delete.php");
 }
+
+
+
+
+
+if($_GET['task']=='mutual')
+{
+	echo "<a href='?id={$_GET['uid']}&task=edit&pages=".$_GET['pages']."'>Go back</a>";
+	include($_GET['pages']."/mutual.php");
+}
+
+if($_GET['task']=='mutual-edit')
+{
+	echo "<a href='?id={$_GET['uid']}&task=edit&pages=".$_GET['pages']."'>Go back</a>";
+	include($_GET['pages']."/mutual-edit.php");
+}
+if($_GET['task']=='mutual-delete')
+{
+	echo "<a href='?id={$_GET['uid']}&task=edit&pages=".$_GET['pages']."'>Go back</a>";
+	include($_GET['pages']."/mutual-delete.php");
+}
+
 ?>

@@ -146,10 +146,6 @@ if($_SESSION['noti']){
 jQuery(document).ready( function() {
 jQuery('.editor').jqte();
 jQuery('#tabs').tabs();
-jQuery('#dataTables-example , .othertables').dataTable( {
- "paginate": false,
- "sort": true
-});
 });
 </script>
 <script>
@@ -158,9 +154,14 @@ jQuery( "#payment_type" ).change(function() {
   if(jQuery( "#payment_type" ).val()=="weekly"){
       jQuery("tr.members-loan-helper").show();
       jQuery("tr.members-loan-edit-helper").show();
+      jQuery("tr.members-mutual-helper").show();
+      jQuery("tr.members-mutual-edit-helper").show();
+
   }else{
        jQuery("tr.members-loan-helper").hide();
        jQuery("tr.members-loan-edit-helper").hide();
+       jQuery("tr.members-mutual-helper").hide();
+       jQuery("tr.members-mutual-edit-helper").hide();       
   }
 });
 

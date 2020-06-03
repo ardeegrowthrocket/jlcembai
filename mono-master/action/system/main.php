@@ -31,6 +31,8 @@ $field[] = array("type"=>"editor","value"=>"vision");
 
          <?php echo multiformconfig("loanterms","Loan Terms",$sdata['loanterms']); ?>
 
+         <?php echo multiformconfig("mutualterms","Mutual Fund Years",$sdata['mutualterms']); ?>
+
 
          <center><input class='btn btn-primary btn-lg' type='submit' name='submit' value='Edit Loan'></center>
       </form>
