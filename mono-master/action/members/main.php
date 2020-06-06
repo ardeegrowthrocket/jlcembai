@@ -1,12 +1,12 @@
 ﻿<?php
  $field = array("name","address","contact","custom_label");
  $where = getwheresearch($field);
- $total = countquery("SELECT id FROM tbl_members");
+ $total = countquery("SELECT id FROM tbl_members $where");
  //primary query
  $limit = getlimit(10,$_GET['p']);
  $query = "SELECT * FROM tbl_members $where $limit";
 
- $q = mysql_query($query);
+ $q = mysql_query_md($query);
  $pagecount = getpagecount($total,10);
 
 
@@ -62,7 +62,7 @@ foreach($field as $ff){
             </thead>
             <tbody>
                <?php
-                  while($row=mysql_fetch_array($q))
+                  while($row=mysql_fetch_md_array($q))
                   {
                     $pid = $row['id'];
 

@@ -5,8 +5,11 @@ error_reporting(E_ALL & ~E_NOTICE);
 function moveredirect($url){
   echo "<script> window.location = '{$url}'; </script>";
 }
-function mysql_query($q){
+function mysql_query_md($q){
 
+  //if($_GET['debug']){
+    #echo $q."<hr>";
+  //}
 		$mysqli = new mysqli("localhost","root","","jlc");
 
 		// Check connection
@@ -28,7 +31,7 @@ function mysql_query($q){
 
 
 
-function mysql_query_insert($q){
+function mysql_query_md_insert($q){
 
     $mysqli = new mysqli("localhost","root","","jlc");
 
@@ -52,15 +55,15 @@ function mysql_query_insert($q){
 
 
 
-function mysql_num_rows($result){
+function mysql_num_rows_md($result){
 	return mysqli_num_rows($result);
 }
 
-function mysql_fetch_assoc($result){
+function mysql_fetch_md_assoc($result){
 	return mysqli_fetch_assoc($result);
 }
 
-function mysql_fetch_array($result){
+function mysql_fetch_md_array($result){
 	return mysqli_fetch_assoc($result);
 }
 
@@ -398,9 +401,9 @@ for ($i = $for_start; $i <= $for_end; $i = strtotime('+1 week', $i)) {
 
               function getarrayconfig($code){
 
-                $q = mysql_query("SELECT value FROM `tbl_system` WHERE code='$code'");
+                $q = mysql_query_md("SELECT value FROM `tbl_system` WHERE code='$code'");
 
-                $a = mysql_fetch_array($q);
+                $a = mysql_fetch_md_array($q);
                 $return = array();
 
 

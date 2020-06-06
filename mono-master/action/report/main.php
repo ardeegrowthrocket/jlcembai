@@ -1,13 +1,51 @@
 ﻿<?php
- $field = array("filename","remarks");
+ #$_GET['is_paid'] = 'yes';  
+ $field = array("amount","remarks","is_paid");
  $where = getwheresearch($field);
- $total = countquery("SELECT id FROM tbl_files $where");
+
+
+ $datefield = "actual";
+
+
+ if($_GET['date1'] == ''){
+  $_GET['date1'] = date("Y-m-d");
+ }
+
+ if($_GET['date1'] != ''){
+
+    if(empty($where)){
+
+      $where = "WHERE $datefield LIKE '%{$_GET['date1']}%'";
+    }else{
+
+      $where .= "AND $datefield LIKE '%{$_GET['date1']}%'";
+    }
+
+ }
+
+
+
+
+ $total = countquery("SELECT id FROM (SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,(1) as tips FROM tbl_schedule
+UNION
+SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,(2) as tips FROM tbl_schedule_mutual
+UNION
+SELECT id,user,actual,amount,createdby,(3) as tips FROM tbl_passbook) as tbl $where");
+
+
+ #echo $where;
+
  //primary query
- $limit = getlimit(10,$_GET['p']);
- $query = "SELECT * FROM tbl_files $where $limit";
+ $limit = getlimit(10000,$_GET['p']);
+
+$query = "SELECT * FROM (SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,(1) as tips FROM tbl_schedule
+UNION
+SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,(2) as tips FROM tbl_schedule_mutual
+UNION
+SELECT id,user,actual,amount,createdby,(3) as tips FROM tbl_passbook) as tbl $where ORDER by actual ASC  $limit";
 
  $q = mysql_query_md($query);
- $pagecount = getpagecount($total,10);
+ $pagecount = getpagecount($total,10000);
 
 
 $field_data = array();
@@ -21,23 +59,37 @@ foreach($field as $ff){
     display:none;
 }
 </style>
-<h2>Files</h2>
+<h2>Daily Collection</h2>
 <div class="panel panel-default">
    <div class="panel-body">
          <div class="row">
-            <div class="col-md-3">
+
+            <div class="col-md-12">
                <div class="panel panel-default">
                   <div class="panel-body">
-                    <input onclick="window.location='<?php echo "?pages=".$_GET['pages']."&task=add"; ?>';" type="button" class="btn btn-primary" value="Add New Data">
-                  </div>
-               </div>
-            </div>
-            <div class="col-md-9">
-               <div class="panel panel-default">
-                  <div class="panel-body">
-                    Search by: <?php echo (implode(", ", $field_data)); ?>
+                    Filter the date per day.
+
+
                     <form method=''>
-                    <input type='text' value='<?php echo $_GET['search']; ?>' name='search'>
+                    <table>
+<!--                       <tr>
+                        <td>Search Keyword:</td>
+                        <td><input type='text' value='<?php echo $_GET['search']; ?>' name='search'></td>
+                      </tr>
+
+
+                      <tr>
+                        <td>From:</td>
+                        <td><input type='date' value='<?php echo $_GET['date1']; ?>' name='date1'></td>
+                      </tr>  -->                  
+                      <tr>
+                        <td>To:</td>
+                        <td><input type='date' value='<?php echo $_GET['date1']; ?>' name='date1'></td>
+                      </tr>    
+
+
+                    </table>
+                    <br/>
                     <input type='hidden' name='pages' value='<?php echo $_GET['pages'];?>'>
                     <input type='submit' name='search_button' class="btn btn-primary"/>
                     </form>
@@ -52,10 +104,9 @@ foreach($field as $ff){
          <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables-example">
             <thead>
                <tr role='row'>
-                  
-                  <th>Description</th>
-                  <th>Filename</th>
-                  <th>Action</th>
+                  <th>Remarks</th>
+                  <th>Amount</th> 
+                  <th>C/O</th>  
                </tr>
             </thead>
             <tbody>
@@ -63,16 +114,12 @@ foreach($field as $ff){
                   while($row=mysql_fetch_md_array($q))
                   {
                     $pid = $row['id'];
- 
                   ?>
                <tr>
-                  <td><?php echo $row['remarks']; ?></td>
-                  <td><?php echo $row['filename']; ?></td>
-                  <td>
-                    <input onclick="window.location='<?php echo $row['link']; ?>';" type="button" class="btn btn-primary btn-sm" value="Download">
-                     <input onclick="window.location='<?php echo "?pages=".$_GET['pages']."&task=edit&id=$pid"; ?>';" type="button" class="btn btn-primary btn-sm" value="Edit">
-                     <input onclick="window.location='<?php echo "?pages=".$_GET['pages']."&task=delete&id=$pid"; ?>';" type="button" class="btn btn-primary btn-sm" value="Delete">
-                  </td>
+                  <td><?php echo $row['tips']; ?></td>
+                  <td><?php echo number_format($row['amount'],2); ?></td>
+                  <td><?php echo $row['createdby']; ?></td>
+                  
                </tr>
                <?php
                   }

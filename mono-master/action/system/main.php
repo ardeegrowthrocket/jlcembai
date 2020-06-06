@@ -1,8 +1,8 @@
 ﻿<?php
    $primary = "id";
    $tbl = "tbl_system";
-   $query  = mysql_query("SELECT * FROM $tbl");
-   while($row=mysql_fetch_assoc($query))
+   $query  = mysql_query_md("SELECT * FROM $tbl");
+   while($row=mysql_fetch_md_assoc($query))
    {
 
           $sdata[$row['code']] = $row['value'];
@@ -34,7 +34,7 @@ $field[] = array("type"=>"editor","value"=>"vision");
          <?php echo multiformconfig("mutualterms","Mutual Fund Years",$sdata['mutualterms']); ?>
 
 
-         <center><input class='btn btn-primary btn-lg' type='submit' name='submit' value='Edit Loan'></center>
+         <center><input class='btn btn-primary btn-lg' type='submit' name='submit' value='Save Configuration'></center>
       </form>
    </div>
 </div> 

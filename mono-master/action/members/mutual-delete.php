@@ -12,7 +12,7 @@ if(!empty($_GET['uid'])){
       }
    }
 
-   $query  = mysql_query_md("SELECT * FROM tbl_loan WHERE $primary='{$_GET['id']}'");
+   $query  = mysql_query_md("SELECT * FROM tbl_mutual WHERE $primary='{$_GET['id']}'");
    while($row=mysql_fetch_md_assoc($query))
    {
       foreach($row as $key=>$val)
@@ -66,22 +66,12 @@ $release = array();
 $release['0'] = "No";
 $release['1'] = "Yes";
 
-
-$field[] = array("type"=>"select","value"=>"loandesc","label"=>"Loan Class","option"=>getarrayconfig('loanclass'));
-$field[] = array("type"=>"select","value"=>"loan_type","option"=>array("Collateral"=>"Collateral","Not Collateral"=>"Not Collateral"),"label"=>"Type of Loan");
-$field[] = array("type"=>"number","value"=>"amount","attributes"=>array("onkeyup"=>"autogenloan()"));
-$field[] = array("type"=>"number","value"=>"interest","label"=>"Interest (%)","attributes"=>array("onkeyup"=>"autogenloan()"));
-$field[] = array("type"=>"number","value"=>"interest_amount","label"=>"Interest Amount","attributes"=>array("readonly"=>"readonly"));
-$field[] = array("type"=>"number","value"=>"net","label"=>"Net Amount","attributes"=>array("readonly"=>"readonly"));
-$field[] = array("type"=>"number","value"=>"penalty","label"=>"Penalty Rate (%)");
-$field[] = array("type"=>"select","value"=>"terms","label"=>"Number of Months","option"=>getarrayconfig('loanterms'));
-
+$field[] = array("type"=>"number","value"=>"amount","label"=>"Premium Account (amount)");
+$field[] = array("type"=>"select","value"=>"terms","label"=>"Number of Months","option"=>getarrayconfig('mutualterms'));
 $field[] = array("type"=>"select","value"=>"payment_type","label"=>"Payment Type","option"=>$ptype);
 $field[] = array("type"=>"select","value"=>"helper","label"=>"What days of week(for weekly payment)","option"=>$week);
-$field[] = array("type"=>"date","value"=>"loan_date","label"=>"Loan Date");
 $field[] = array("type"=>"date","value"=>"loan_start","label"=>"Payment Start Date");
 $field[] = array("type"=>"text","value"=>"remarks");
-$field[] = array("type"=>"select","value"=>"is_release","label"=>"Loan Is Released?","option"=>$release);
 
 
 $show = 1;
@@ -92,7 +82,7 @@ if($sdata['is_release']){
 
 $show = 0;
 ?>
-<h2>Delete Loan - <?php echo  $sdata['name']; ?></h2>
+<h2>Delete Mutual Fund - <?php echo  $sdata['name']; ?></h2>
 
 <?php
 if($show) {

@@ -18,7 +18,7 @@ $accounts_id = $_SESSION['accounts_id'];
 		$_SESSION['email'] = $_POST['email'];
 		unset($_POST['submit']);
 		$fields = formquery($_POST);
-		mysql_query("UPDATE tbl_accounts SET $fields WHERE accounts_id='$accounts_id'");
+		mysql_query_md("UPDATE tbl_accounts SET $fields WHERE accounts_id='$accounts_id'");
 		$success = 1;
 		}
 	}
@@ -29,8 +29,8 @@ $field[] = array("type"=>"text","value"=>"username","attr"=>"disabled");
 $field[] = array("type"=>"password","value"=>"password","attr"=>"disabled");
 $field[] = array("type"=>"email","value"=>"email");
 //
-$q = mysql_query("SELECT * FROM tbl_accounts WHERE accounts_id='$accounts_id'");
-$row = mysql_fetch_assoc($q);
+$q = mysql_query_md("SELECT * FROM tbl_accounts WHERE accounts_id='$accounts_id'");
+$row = mysql_fetch_md_assoc($q);
 foreach($field as $f)
 {
 	$$f['value'] = $row[$f['value']];
@@ -85,8 +85,8 @@ if($success!='')
 												if($$inputs['value']!='' && $inputs['value']=='code_id')
 												{ 
 												 $code = $$inputs['value'];
-												 $codeqq = mysql_query("SELECT * FROM tbl_code as a JOIN tbl_rate as b JOIN tbl_accounts as c WHERE c.code_id=a.code_value AND a.code_value='$code' AND a.code_package=b.rate_id");
-												 $coderow = mysql_fetch_array($codeqq);
+												 $codeqq = mysql_query_md("SELECT * FROM tbl_code as a JOIN tbl_rate as b JOIN tbl_accounts as c WHERE c.code_id=a.code_value AND a.code_value='$code' AND a.code_package=b.rate_id");
+												 $coderow = mysql_fetch_md_array($codeqq);
 												 
 												//asds
 												

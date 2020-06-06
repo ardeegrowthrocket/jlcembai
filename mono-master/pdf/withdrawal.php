@@ -10,12 +10,12 @@ $tracking = $_GET['id'];
 //1000000
 //
 $ids = explode("-",$tracking);
-$q = mysql_query("SELECT * FROM tbl_withdraw_history WHERE transnum='$tracking'");
-$ss = mysql_fetch_assoc($q);
+$q = mysql_query_md("SELECT * FROM tbl_withdraw_history WHERE transnum='$tracking'");
+$ss = mysql_fetch_md_assoc($q);
 $amount = number_format($ss['amount'],2);
 $accounts_id = $ss['accounts_id'];
-$q = mysql_query("SELECT * FROM tbl_accounts WHERE accounts_id='$accounts_id'");
-$row = mysql_fetch_assoc($q);
+$q = mysql_query_md("SELECT * FROM tbl_accounts WHERE accounts_id='$accounts_id'");
+$row = mysql_fetch_md_assoc($q);
 $name = $row['firstname']." ".$row['lastname'];
 
 if($_SESSION['accounts_id']=='')

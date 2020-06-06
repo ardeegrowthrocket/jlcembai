@@ -1,7 +1,7 @@
 ﻿<?php
  $query = "SELECT * FROM tbl_passbook WHERE user='{$_REQUEST['id']}' ORDER by actual ASC";
 
- $q = mysql_query($query);
+ $q = mysql_query_md($query);
 ?>
 <style>
 #dataTables-example_filter , #dataTables-example_info , #dataTables-example_wrapper .row
@@ -29,7 +29,7 @@
             <tbody>
                <?php
                $balance = 0;
-                  while($row=mysql_fetch_array($q))
+                  while($row=mysql_fetch_md_array($q))
                   {
                     $withdraw = 0;
                     $save = 0;

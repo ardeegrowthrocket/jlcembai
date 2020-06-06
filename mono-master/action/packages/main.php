@@ -1,5 +1,5 @@
 ﻿<?php
-$q = mysql_query("SELECT * FROM tbl_package");
+$q = mysql_query_md("SELECT * FROM tbl_package");
 ?>
 <h2>Package</h2>
                     <div class="panel panel-default">
@@ -20,7 +20,7 @@ $q = mysql_query("SELECT * FROM tbl_package");
                                     </thead>
                                     <tbody>
 									<?php
-									while($row=mysql_fetch_array($q))
+									while($row=mysql_fetch_md_array($q))
 									{
 									?>
                                         <tr>

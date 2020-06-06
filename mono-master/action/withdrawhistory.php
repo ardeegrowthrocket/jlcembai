@@ -3,7 +3,7 @@ session_start();
 require_once("./connect.php");
 require_once("./function.php");
 $accounts_id = $_SESSION['accounts_id'];
-$q = mysql_query("SELECT * FROM tbl_withdraw_history WHERE accounts_id='$accounts_id' ORDER by history DESC");
+$q = mysql_query_md("SELECT * FROM tbl_withdraw_history WHERE accounts_id='$accounts_id' ORDER by history DESC");
 
 ?>
 <h2>Withdrawal History</h2>
@@ -23,7 +23,7 @@ $q = mysql_query("SELECT * FROM tbl_withdraw_history WHERE accounts_id='$account
                                     </thead>
                                     <tbody>
 									<?php
-									while($row=mysql_fetch_array($q))
+									while($row=mysql_fetch_md_array($q))
 									{
 									?>
                                         <tr>

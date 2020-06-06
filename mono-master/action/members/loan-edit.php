@@ -3,8 +3,8 @@ if(!empty($_GET['uid'])){
    $primary = "id";
    $pid = $_GET['uid'];
    $tbl = "tbl_members";
-   $query  = mysql_query("SELECT * FROM $tbl WHERE $primary='$pid'");
-   while($row=mysql_fetch_assoc($query))
+   $query  = mysql_query_md("SELECT * FROM $tbl WHERE $primary='$pid'");
+   while($row=mysql_fetch_md_assoc($query))
    {
       foreach($row as $key=>$val)
       {
@@ -12,8 +12,8 @@ if(!empty($_GET['uid'])){
       }
    }
 
-   $query  = mysql_query("SELECT * FROM tbl_loan WHERE $primary='{$_GET['id']}'");
-   while($row=mysql_fetch_assoc($query))
+   $query  = mysql_query_md("SELECT * FROM tbl_loan WHERE $primary='{$_GET['id']}'");
+   while($row=mysql_fetch_md_assoc($query))
    {
       foreach($row as $key=>$val)
       {
@@ -124,7 +124,7 @@ if($show) {
 
  $query = "SELECT * FROM tbl_schedule WHERE loan_id='{$_GET['id']}'";
 
- $q = mysql_query($query);
+ $q = mysql_query_md($query);
 
          ?>
 <div class="panel panel-default">
@@ -149,7 +149,7 @@ if($show) {
             </thead>
             <tbody class='loaneditbody'>
                <?php
-                  while($row=mysql_fetch_array($q))
+                  while($row=mysql_fetch_md_array($q))
                   {
                     $pid = $row['accounts_id'];
                     $roledata = ($row['role'] >= 1 ? 'Administrator' : 'Teller');

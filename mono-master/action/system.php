@@ -38,13 +38,13 @@ if($_POST['submit']!='' && $_POST['task']=='configsave')
 		$val = addslashes(json_encode($newarray));
 		$s = "INSERT INTO $tbl SET code='$key',value='$val' ON DUPLICATE KEY UPDATE code='$key',value='$val'";
 		#echo $s."<br>";
-		mysql_query($s);
+		mysql_query_md($s);
 		}else{
 
 		$val = addslashes($val);
 		$s = "INSERT INTO $tbl SET code='$key',value='$val' ON DUPLICATE KEY UPDATE code='$key',value='$val'";
 		#echo $s."<br>";
-		mysql_query($s);		
+		mysql_query_md($s);		
 		}
 
 

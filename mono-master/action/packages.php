@@ -10,7 +10,7 @@ if($_POST['submit']!='' && $_POST['task']=='add')
 	unset($_POST['submit']);
 	unset($_POST['task']);
 	$fields = formquery($_POST);
-	mysql_query("INSERT INTO $tbl SET $fields");
+	mysql_query_md("INSERT INTO $tbl SET $fields");
 	echo '<div class="noti"><ul class="fa-ul"><li><i class="fa fa-check fa-li"></i>Done adding data.</li></ul></div>';
 }
 
@@ -19,7 +19,7 @@ if($_POST['submit']!='' && $_POST['task']=='edit')
 	unset($_POST['submit']);
 	unset($_POST['task']);
 	$fields = formquery($_POST);
-	mysql_query("UPDATE $tbl SET $fields WHERE $primary=".$_POST[$primary]);
+	mysql_query_md("UPDATE $tbl SET $fields WHERE $primary=".$_POST[$primary]);
 	echo '<div class="noti"><ul class="fa-ul"><li><i class="fa fa-check fa-li"></i>Done editing data.</li></ul></div>';
 }
 
@@ -29,7 +29,7 @@ if($_POST['submit']!='' && $_POST['task']=='delete')
 	unset($_POST['submit']);
 	unset($_POST['task']);
 	$fields = formquery($_POST);
-	mysql_query("DELETE FROM $tbl WHERE $primary=".$_POST[$primary]);
+	mysql_query_md("DELETE FROM $tbl WHERE $primary=".$_POST[$primary]);
 	echo '<div class="noti"><ul class="fa-ul"><li><i class="fa fa-check fa-li"></i>Done deleting the data.</li></ul></div>';
 }
 /*SQL*/

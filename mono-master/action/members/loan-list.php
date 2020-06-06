@@ -1,13 +1,14 @@
 ﻿<?php
- $field = array("amount","terms","remarks","penalty","interest");
+ $_GET['user'] = $_GET['id'];
+ $field = array("amount","terms","remarks","penalty","interest","user");
  $where = getwheresearch($field);
- $total = countquery("SELECT id FROM tbl_loan WHERE user='{$_GET['id']}'");
+ $total = countquery("SELECT id FROM tbl_loan $where");
  //primary query
- $limit = getlimit(10,$_GET['p']);
+ $limit = getlimit(100,$_GET['p']);
  $query = "SELECT * FROM tbl_loan $where $limit";
 
- $q = mysql_query($query);
- $pagecount = getpagecount($total,10);
+ $q = mysql_query_md($query);
+ $pagecount = getpagecount($total,100);
 
 
 $field_data = array();
@@ -64,7 +65,7 @@ foreach($field as $ff){
             </thead>
             <tbody>
                <?php
-                  while($row=mysql_fetch_array($q))
+                  while($row=mysql_fetch_md_array($q))
                   {
                     $pid = $row['id'];
                     $interest_amount = ($row['amount'] * percentget($row['interest']));

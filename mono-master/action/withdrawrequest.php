@@ -3,8 +3,8 @@ session_start();
 require_once("./connect.php");
 require_once("./function.php");
 $accounts_id = $_SESSION['accounts_id'];
-$q = mysql_query("SELECT * FROM tbl_accounts WHERE accounts_id='$accounts_id'");
-$row = mysql_fetch_assoc($q);
+$q = mysql_query_md("SELECT * FROM tbl_accounts WHERE accounts_id='$accounts_id'");
+$row = mysql_fetch_md_assoc($q);
 function trans()
 {
     $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -33,12 +33,12 @@ function trans()
 		if($error=='')
 		{
 		$sum  = $row['balance'] - $_POST['withdraw'];
-		mysql_query("UPDATE tbl_accounts SET balance='".$sum."' WHERE accounts_id='$accounts_id'");
+		mysql_query_md("UPDATE tbl_accounts SET balance='".$sum."' WHERE accounts_id='$accounts_id'");
 		$success = 1;
 		$trans = trans();
-		mysql_query("INSERT INTO tbl_withdraw_history SET cp_number='".$_POST['cp_number']."',team_name='".$_POST['team_name']."',transnum='$trans',remit_name='".$_POST['remit_name']."',smartpadala='".$_POST['smartpadala']."',claimtype='".$_POST['claimtype']."',name='".$_POST['name']."',phone='".$_POST['phone']."',address='".$_POST['address']."',accounts_id='$accounts_id',new_balance='".$sum."',amount='".$_POST['withdraw']."',current_balance='".$row['balance']."',bank_name='".$_POST['bank_name']."',bank_accountname='".$_POST['bank_accountname']."',bank_accountnumber='".$_POST['bank_accountnumber']."'");
-		$q = mysql_query("SELECT * FROM tbl_accounts WHERE accounts_id='$accounts_id'");
-		$row = mysql_fetch_assoc($q);		
+		mysql_query_md("INSERT INTO tbl_withdraw_history SET cp_number='".$_POST['cp_number']."',team_name='".$_POST['team_name']."',transnum='$trans',remit_name='".$_POST['remit_name']."',smartpadala='".$_POST['smartpadala']."',claimtype='".$_POST['claimtype']."',name='".$_POST['name']."',phone='".$_POST['phone']."',address='".$_POST['address']."',accounts_id='$accounts_id',new_balance='".$sum."',amount='".$_POST['withdraw']."',current_balance='".$row['balance']."',bank_name='".$_POST['bank_name']."',bank_accountname='".$_POST['bank_accountname']."',bank_accountnumber='".$_POST['bank_accountnumber']."'");
+		$q = mysql_query_md("SELECT * FROM tbl_accounts WHERE accounts_id='$accounts_id'");
+		$row = mysql_fetch_md_assoc($q);		
 		}
 	}
 	

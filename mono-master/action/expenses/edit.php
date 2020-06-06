@@ -2,8 +2,8 @@
 $primary = "id";
 $pid = $_GET['id'];
 $tbl = "tbl_expenses";
-$query  = mysql_query("SELECT * FROM $tbl WHERE $primary='$pid'");
-while($row=mysql_fetch_assoc($query))
+$query  = mysql_query_md("SELECT * FROM $tbl WHERE $primary='$pid'");
+while($row=mysql_fetch_md_assoc($query))
 {
 	foreach($row as $key=>$val)
 	{

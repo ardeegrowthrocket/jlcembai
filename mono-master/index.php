@@ -9,8 +9,8 @@ exit("<script> window.location='login.php' </script>");
 $main = getrow("tbl_logo");
 $tablerowxxx = "tbl_accounts";
 $queryrowxxx = "SELECT * FROM $tablerowxxx WHERE accounts_id='".$_SESSION['accounts_id']."'";
-$qrowxxx = mysql_query($queryrowxxx);
-$rowxxx = mysql_fetch_assoc($qrowxxx);
+$qrowxxx = mysql_query_md($queryrowxxx);
+$rowxxx = mysql_fetch_md_assoc($qrowxxx);
 foreach($rowxxx as $key=>$val)
 {
 $_SESSION[$key] = $val;
@@ -43,7 +43,7 @@ $_SESSION[$key] = $val;
             display:none;
         }
     }
-   input[type="number"],input[type="date"],input[type="text"] ,select , textarea {
+   input[type="number"],input[type="date"],input[type="text"],input[type="email"] ,select , textarea , input[type="password"] {
       width:300px;
       height: 30px;
    }
@@ -67,6 +67,12 @@ input.btn.btn-primary.btn-sm {
 .jqte_tool.jqte_tool_1 .jqte_tool_label {
   height:35px;
   }
+
+
+
+  input.btn.btn-primary.btn-lg {
+    margin-top: 16px;
+}
    </style> 
 </head>
 <body>
@@ -143,6 +149,14 @@ if($_SESSION['noti']){
 <script type="text/javascript" src="assets/js/jquery-te-1.4.0.min.js" charset="utf-8"></script>
 
 <script>
+
+jQuery(document).ready( function() {
+jQuery('#dataTables-example').dataTable( {
+ "paginate": false,
+ "sort": false,
+});
+});
+
 jQuery(document).ready( function() {
 jQuery('.editor').jqte();
 jQuery('#tabs').tabs();
@@ -201,6 +215,19 @@ function removeme(data){
   jQuery('.'+data).remove();
 }
 
+
+function printData(idtoprint)
+{
+   var divToPrint=document.getElementById(idtoprint);
+   newWin= window.open("");
+   var header = '';
+   if(jQuery('.headerprint').html()){
+    header = jQuery('.headerprint').html();
+   }
+   newWin.document.write(header+divToPrint.outerHTML);
+   newWin.print();
+   newWin.close();
+}
 
 </script>
  

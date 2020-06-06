@@ -1,12 +1,13 @@
 ﻿<?php
- $field = array("amount","terms","remarks");
+$_GET['user'] = $_GET['id'];
+ $field = array("amount","terms","remarks","user");
  $where = getwheresearch($field);
- $total = countquery("SELECT id FROM tbl_mutual WHERE user='{$_GET['id']}'");
+ $total = countquery("SELECT id FROM tbl_mutual $where");
  //primary query
  $limit = getlimit(10,$_GET['p']);
  $query = "SELECT * FROM tbl_mutual $where $limit";
 
- $q = mysql_query($query);
+ $q = mysql_query_md($query);
  $pagecount = getpagecount($total,10);
 
 
@@ -51,7 +52,7 @@ foreach($field as $ff){
             </thead>
             <tbody>
                <?php
-                  while($row=mysql_fetch_array($q))
+                  while($row=mysql_fetch_md_array($q))
                   {
                     $pid = $row['id'];
                     $interest_amount = ($row['amount'] * percentget($row['interest']));

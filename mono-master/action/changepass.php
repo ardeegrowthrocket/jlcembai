@@ -22,7 +22,7 @@ $accounts_id = $_SESSION['accounts_id'];
 		$_SESSION['password'] = $_POST['new_password1'];
 		unset($_POST['submit']);
 		$fields = formquery($_POST);
-		mysql_query("UPDATE tbl_accounts SET password='".$_POST['new_password1']."' WHERE accounts_id='$accounts_id'");
+		mysql_query_md("UPDATE tbl_accounts SET password='".$_POST['new_password1']."' WHERE accounts_id='$accounts_id'");
 		$success = 1;
 		}
 	}
@@ -82,8 +82,8 @@ if($success!='')
 												if($$inputs['value']!='' && $inputs['value']=='code_id')
 												{ 
 												 $code = $$inputs['value'];
-												 $codeqq = mysql_query("SELECT * FROM tbl_code as a JOIN tbl_rate as b JOIN tbl_accounts as c WHERE c.code_id=a.code_value AND a.code_value='$code' AND a.code_package=b.rate_id");
-												 $coderow = mysql_fetch_array($codeqq);
+												 $codeqq = mysql_query_md("SELECT * FROM tbl_code as a JOIN tbl_rate as b JOIN tbl_accounts as c WHERE c.code_id=a.code_value AND a.code_value='$code' AND a.code_package=b.rate_id");
+												 $coderow = mysql_fetch_md_array($codeqq);
 												 
 												//asds
 												

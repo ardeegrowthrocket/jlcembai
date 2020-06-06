@@ -3,7 +3,7 @@ include("connect.php");
 include("function.php");
 $username = '';
 for ($x = 0; $x <= 100; $x++) {
-	$row = mysql_fetch_assoc(autodetectparent());
+	$row = mysql_fetch_md_assoc(autodetectparent());
 	
 	if($username!=$row['username']){
 		$username = $row['username'];

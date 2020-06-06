@@ -6,7 +6,7 @@
  $limit = getlimit(10,$_GET['p']);
  $query = "SELECT * FROM tbl_withdraw_history as a LEFT JOIN tbl_accounts as b on a.accounts_id=b.accounts_id $where $limit";
 
- $q = mysql_query($query);
+ $q = mysql_query_md($query);
  $options = getpackagelist();
  $pagecount = getpagecount($total,10);
 
@@ -70,7 +70,7 @@
             </thead>
             <tbody>
                <?php
-                  while($row=mysql_fetch_array($q))
+                  while($row=mysql_fetch_md_array($q))
                   {
                     $pid =  $row['id'];
                   ?>

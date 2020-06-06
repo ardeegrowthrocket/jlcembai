@@ -55,6 +55,18 @@
 			<?php
 			}
 			?>
+
+         <li>
+            <a href="#"><i class="fa fa-bar-chart fa-3x"></i>Reports<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level collapse" aria-expanded="false" style="height: 0px;">
+               <li>
+                  <a href="index.php?pages=report&task=dailycollect">Daily Collection</a>
+               </li>
+            </ul>
+         </li>
+
+
+
          <li>
             <a href="logout.php"><i class="fa fa-sign-out fa-3x"></i>Logout</a>
          </li>

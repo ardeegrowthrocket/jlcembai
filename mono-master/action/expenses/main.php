@@ -1,7 +1,7 @@
 ﻿<?php
  $field = array("amount","remarks");
  $where = getwheresearch($field);
- $total = countquery("SELECT id FROM tbl_expenses");
+ $total = countquery("SELECT id FROM tbl_expenses $where");
 
  $datefield = "actual";
 
@@ -29,7 +29,7 @@
 
  $query = "SELECT * FROM tbl_expenses $where ORDER by actual ASC $limit";
 
- $q = mysql_query($query);
+ $q = mysql_query_md($query);
  $pagecount = getpagecount($total,10);
 
 
@@ -107,7 +107,7 @@ foreach($field as $ff){
             </thead>
             <tbody>
                <?php
-                  while($row=mysql_fetch_array($q))
+                  while($row=mysql_fetch_md_array($q))
                   {
                     $pid = $row['id'];
                   ?>

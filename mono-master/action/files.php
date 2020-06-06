@@ -30,7 +30,7 @@ $_POST['filename'] = $_FILES["filename"]["name"];
 	$fields = formquery($_POST);
 
 	echo "INSERT INTO $tbl SET $fields";
-	mysql_query("INSERT INTO $tbl SET $fields");
+	mysql_query_md("INSERT INTO $tbl SET $fields");
 
 	#setcookie('noti', "Done adding data",60, "/");
 
@@ -47,7 +47,7 @@ if($_POST['submit']!='' && $_POST['task']=='edit')
 
 
 
-$datarow = mysql_fetch_assoc(mysql_query("SELECT link FROM tbl_files WHERE $primary=".$_POST[$primary]));
+$datarow = mysql_fetch_md_assoc(mysql_query_md("SELECT link FROM tbl_files WHERE $primary=".$_POST[$primary]));
 unlink($datarow['link']);
 
 $target_dir = "uploads/";
@@ -79,7 +79,7 @@ $_POST['filename'] = $_FILES["filename"]["name"];
 
 
 
-	mysql_query("UPDATE $tbl SET $fields WHERE $primary=".$_POST[$primary]);
+	mysql_query_md("UPDATE $tbl SET $fields WHERE $primary=".$_POST[$primary]);
 	#setcookie('noti', "Done editing data",60, "/");
 	$_SESSION['noti'] = "Done editing data.";
 	$refresh = 1;
@@ -92,14 +92,14 @@ if($_POST['submit']!='' && $_POST['task']=='delete')
 	unset($_POST['task']);
 
 
-	$datarow = mysql_fetch_assoc(mysql_query("SELECT link FROM tbl_files WHERE $primary=".$_POST[$primary]));
+	$datarow = mysql_fetch_md_assoc(mysql_query_md("SELECT link FROM tbl_files WHERE $primary=".$_POST[$primary]));
 	unlink($datarow['link']);
 
 
 
 
 	$fields = formquery($_POST);
-	mysql_query("DELETE FROM $tbl WHERE $primary=".$_POST[$primary]);
+	mysql_query_md("DELETE FROM $tbl WHERE $primary=".$_POST[$primary]);
 	$_SESSION['noti'] = "Done deleting data.";
 	$refresh = 1;
 }
