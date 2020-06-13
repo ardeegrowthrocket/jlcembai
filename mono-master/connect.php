@@ -8,7 +8,7 @@ function moveredirect($url){
 function mysql_query_md($q){
 
   //if($_GET['debug']){
-    #echo $q."<hr>";
+  #echo $q."<hr>";
   //}
 		$mysqli = new mysqli("localhost","root","","jlc");
 

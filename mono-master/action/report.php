@@ -9,11 +9,10 @@ if($_SESSION['role']!=1)
 if($_GET['task']=='')
 {
 	
-	include($_GET['pages']."/main.php");
+	include($_GET['pages']."/jlcdaily.php");
 }
 if($_GET['task']!='')
 {
-	echo "<a href='?pages=".$_GET['pages']."'>Go back</a>";
 	include($_GET['pages']."/".$_GET['task'].".php");
 }
 

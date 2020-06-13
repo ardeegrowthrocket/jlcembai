@@ -1,7 +1,17 @@
 ﻿<?php
- $query = "SELECT * FROM tbl_passbook WHERE user='{$_REQUEST['id']}' ORDER by actual ASC";
-
+ $total = countquery("SELECT id FROM tbl_passbook WHERE user='{$_REQUEST['id']}' ORDER by actual ASC");
+ $limit = getlimit(100,$_GET['p']);
+ $query = "SELECT * FROM tbl_passbook WHERE user='{$_REQUEST['id']}' ORDER by actual ASC $limit";
  $q = mysql_query_md($query);
+ $pagecount = getpagecount($total,100);
+
+
+
+$with =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM tbl_passbook WHERE user='{$_REQUEST['id']}' AND ptype='withdraw'"));
+$save =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM tbl_passbook WHERE user='{$_REQUEST['id']}' AND ptype='savings'"));
+
+
+
 ?>
 <style>
 #dataTables-example_filter , #dataTables-example_info , #dataTables-example_wrapper .row
@@ -12,7 +22,15 @@
 <div class="panel panel-default">
    <div class="panel-body"> 
       <div class="table-responsive">
-
+        <div class="row">
+            <div class="col-md-12">
+               <div class="panel panel-default">
+                  <div class="panel-body">
+                      Remaining Balance: <?php echo number_format($save['total'] - $with['total'],2); ?>
+                  </div>
+               </div>
+            </div>           
+         </div>
          
          <br/>
          <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables-example">
@@ -21,8 +39,8 @@
                   <th>Date</th>
                   <th>Savings</th>
                   <th>Withdraw</th>
-                  <th>Ending Balance</th>
                   <th>Remarks</th>
+                  <th>C/O</th>
                   <th>Action</th>
                </tr>
             </thead>
@@ -47,8 +65,8 @@
                   <td><?php echo date("m-d-Y",strtotime($row['actual'])); ?></td>
                   <td><?php echo number_format($save,2); ?></td>
                   <td><?php echo number_format($withdraw,2); ?></td>
-                  <td><?php echo $balance; ?></td>
-                  <td><?php echo $row['createdby']; ?> <hr> <?php echo $row['remarks']; ?></td>
+                  <td><?php echo $row['remarks']; ?></td>
+                  <td><?php echo $row['createdby']; ?></td>
                   <td>
                     <?php
                         $ajax = array();
@@ -69,7 +87,7 @@
             </tbody>
          </table>
       </div>
-<!--             <div class="row">
+<div class="row">
                <div class="col-sm-6">
                   <div class="dataTables_paginate paging_simple_numbers">
                      <ul class="pagination">
@@ -86,7 +104,7 @@
                           {
                             $active = 'active';
                           }
-                          $url = "?&id={$_GET['id']}&task=edit&search=".$_GET['search']."&pages=".$_GET['pages']."&search_button=Submit&p=".$c;
+                          $url = "?&id={$_GET['id']}&task=edit&search=".$_GET['search']."&pages=".$_GET['pages']."&search_button=Submit&p=".$c."#tabs-3";
                       ?>
                         <li class="paginate_button <?php echo $active; ?>" aria-controls="dataTables-example" tabindex="0"><a href="<?php echo $url; ?>"><?php echo $c; ?></a></li>
                       <?php
@@ -95,7 +113,7 @@
                      </ul>
                   </div>
                </div>
-            </div>   -->    
+            </div>   
             <button id='createpayment1' onclick="addsw('Add Savings','savings')" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Add Savings</button>
             <button id='createpayment2' onclick="addsw('Add Withdraw','withdraw')"  type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Add Withdraw</button>
 

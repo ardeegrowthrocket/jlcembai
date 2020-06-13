@@ -62,10 +62,37 @@
                <li>
                   <a href="index.php?pages=report&task=dailycollect">Daily Collection</a>
                </li>
+               <li>
+                  <a href="index.php?pages=report&task=jlcdaily">JLC Collection</a>
+               </li>
+               <li>
+                  <a href="index.php?pages=report&task=loanrelease">Loan Release</a>
+               </li>
+               <li>
+                  <a href="index.php?pages=report&task=loanbalance">Loan Balance</a>
+               </li>
+               <li>
+                  <a href="index.php?pages=report&task=delays">Delay</a>
+               </li>
+               <li>
+                  <a href="index.php?pages=report&task=withdraw">Withdrawals</a>
+               </li>
+
             </ul>
          </li>
 
+         <li>
+            <a href="#"><i class="fa fa-university fa-3x"></i>Life Insurance<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level collapse" aria-expanded="false" style="height: 0px;">
+               <li>
+                  <a href="index.php?pages=report&task=licollections">LI Collection</a>
+               </li>
+               <li>
+                  <a href="index.php?pages=report&task=limembers">LI Members</a>
+               </li>
 
+            </ul>
+         </li>
 
          <li>
             <a href="logout.php"><i class="fa fa-sign-out fa-3x"></i>Logout</a>

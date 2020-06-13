@@ -26,26 +26,26 @@
 
 
 
- $total = countquery("SELECT id FROM (SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,(1) as tips FROM tbl_schedule
+ $total = countquery("SELECT id FROM (SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(1) as tips FROM tbl_schedule
 UNION
-SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,(2) as tips FROM tbl_schedule_mutual
+SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(2) as tips FROM tbl_schedule_mutual
 UNION
-SELECT id,user,actual,amount,createdby,(3) as tips FROM tbl_passbook) as tbl $where");
+SELECT id,user,actual,amount,createdby,(0) as loan_id,(3) as tips FROM tbl_passbook WHERE schedule_id IS NULL) as tbl $where");
 
 
  #echo $where;
 
  //primary query
- $limit = getlimit(10000,$_GET['p']);
+ $limit = getlimit(100000,$_GET['p']);
 
-$query = "SELECT * FROM (SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,(1) as tips FROM tbl_schedule
+$query = "SELECT * FROM (SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(1) as tips FROM tbl_schedule
 UNION
-SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,(2) as tips FROM tbl_schedule_mutual
+SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(2) as tips FROM tbl_schedule_mutual
 UNION
-SELECT id,user,actual,amount,createdby,(3) as tips FROM tbl_passbook) as tbl $where ORDER by actual ASC  $limit";
+SELECT id,user,actual,amount,createdby,(0) as loan_id,(3) as tips FROM tbl_passbook WHERE schedule_id IS NULL) as tbl $where ORDER by actual ASC  $limit";
 
  $q = mysql_query_md($query);
- $pagecount = getpagecount($total,10000);
+ $pagecount = getpagecount($total,100000);
 
 
 $field_data = array();
@@ -60,6 +60,9 @@ foreach($field as $ff){
 }
 </style>
 <h2>Daily Collection</h2>
+
+
+<p class='headerprint' style='display:none;'>Daily Collection Record for - <?php echo $_GET['date1']; ?></p>
 <div class="panel panel-default">
    <div class="panel-body">
          <div class="row">
@@ -91,7 +94,15 @@ foreach($field as $ff){
                     </table>
                     <br/>
                     <input type='hidden' name='pages' value='<?php echo $_GET['pages'];?>'>
+                    <input type='hidden' name='task' value='<?php echo $_GET['task'];?>'>                    
                     <input type='submit' name='search_button' class="btn btn-primary"/>
+
+                    <input value="Print as PDF" onclick="printData('dataTables-example')" type='button' name='print' class="btn btn-primary"/>
+
+
+                    <input value="Print as CSV" onclick="window.location='uploads/<?php echo $_GET['date1'].$_GET['task']; ?>.csv';" type='button' name='print' class="btn btn-primary"/>
+
+
                     </form>
                   </div>
                </div>
@@ -101,33 +112,89 @@ foreach($field as $ff){
 
          
          <br/>
-         <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables-example">
+         <table border='1' class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables-example">
             <thead>
                <tr role='row'>
-                  <th>Remarks</th>
+                  <th>Details</th>
                   <th>Amount</th> 
                   <th>C/O</th>  
                </tr>
             </thead>
             <tbody>
                <?php
+               $totalamount = 0;
+               $csv = array();
+
+               $csv[] = array("Details","Amount","C/O");
                   while($row=mysql_fetch_md_array($q))
                   {
+
+                    $csvrow = array();
                     $pid = $row['id'];
+                    $totalamount += $row['amount'];
+                    $remarks = "";
+                    if($row['tips']==1){
+                      $sched = loadrow('tbl_schedule','id',$row['id']);
+                      $loan = loadrow('tbl_loan','id',$row['loan_id']);
+                      $members = loadrow('tbl_members','id',$row['user_id']);
+
+
+                      $remarks = "Payment for Loan: {$loan['loandesc']} of  {$members['name']} - {$sched['schedule']}";
+                    }
+
+                    if($row['tips']==2){
+                      $sched = loadrow('tbl_schedule_mutual','id',$row['id']);
+                      $loan = loadrow('tbl_mutual','id',$row['loan_id']);
+                      $members = loadrow('tbl_members','id',$row['user_id']);
+
+
+                      $remarks = "Payment for Mutual Fund: {$members['name']} - {$sched['schedule']}";
+                    }
+
+                    if($row['tips']==3){
+                      $members = loadrow('tbl_members','id',$row['user_id']);
+                      $loan = loadrow('tbl_passbook','id',$row['id']);                     
+                      $remarks = "Added Savings for: {$members['name']} - {$loan['actual']}";
+                    }
+
+
+
+
+                    
                   ?>
                <tr>
-                  <td><?php echo $row['tips']; ?></td>
-                  <td><?php echo number_format($row['amount'],2); ?></td>
-                  <td><?php echo $row['createdby']; ?></td>
+                  <td><?php echo $csvrow[] = $remarks; ?></td>
+                  <td><?php echo $csvrow[] = number_format($row['amount'],2); ?></td>
+                  <td><?php echo $csvrow[] = $row['createdby']; ?></td>
                   
                </tr>
                <?php
+                  $csv[] = $csvrow;
                   }
+
+                  
                   ?>
+
             </tbody>
+            <tfoot>
+                   <?php  
+                  if (!empty($totalamount)) {
+                    $totalamount = number_format($totalamount,2);
+
+                    $csv[] = array("Total :".$totalamount);
+                    echo "<tr><td colspan='3'>Total : {$totalamount}</td></tr>";
+                  }
+
+
+
+
+                  createcsv($csv,$_GET['date1'].$_GET['task']);
+                  ?>                
+            </tfoot>
          </table>
+
       </div>
-            <div class="row">
+            <div class="row" style='display:none;'>
                <div class="col-sm-6">
                   <div class="dataTables_paginate paging_simple_numbers">
                      <ul class="pagination">

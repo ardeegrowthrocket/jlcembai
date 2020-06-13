@@ -9,10 +9,10 @@
 
     if(empty($where)){
 
-      $where = "WHERE $datefield BETWEEN '{$_GET['date1']}' and '{$_GET['date2']}'";
+      $where = "WHERE $datefield BETWEEN '{$_GET['date1']} 00:00:00' and '{$_GET['date2']} 23:00:00'";
     }else{
 
-      $where .= "AND $datefield BETWEEN '{$_GET['date1']}' and '{$_GET['date2']}'";
+      $where .= "AND $datefield BETWEEN '{$_GET['date1']} 00:00:00' and '{$_GET['date2']} 23:00:00'";
     }
 
  }

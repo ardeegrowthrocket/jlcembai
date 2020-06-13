@@ -116,13 +116,17 @@ if($show) {
    </div>
 </div> 
 
-
+<style>
+.overdue {
+  background-color: #efa3a3!important;
+}
+</style>
 
 
          <?php
             if(!$show) {
 
- $query = "SELECT * FROM tbl_schedule WHERE loan_id='{$_GET['id']}'";
+ $query = "SELECT * FROM tbl_schedule WHERE loan_id='{$_GET['id']}' ORDER by schedule ASC";
 
  $q = mysql_query_md($query);
 
@@ -172,8 +176,16 @@ if($show) {
                      $vd = addslashes($vd);
                      $json_loan[] = "tableloandata-{$kd}='$vd'";
                     }
+
+                    $overdue = 0;
+
+                    if(strtotime($row['schedule']) <= strtotime(date("Y-m-d")) && $row['is_paid']!='yes'){
+
+                        $overdue = 1;
+
+                    }
                   ?>
-               <tr id='loandataajax<?php echo $row['id']; ?>' <?php echo implode(" ",$json_loan); ?>>
+               <tr class='<?php if($overdue) { echo "overdue"; } ?>' id='loandataajax<?php echo $row['id']; ?>' <?php echo implode(" ",$json_loan); ?>>
                   <td><?php echo $schedule; ?></td>
                   <td><?php echo number_format($row['payment'],2); ?></td>
                   <td><?php echo number_format($row['savings'],2); ?></td>

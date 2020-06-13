@@ -208,8 +208,55 @@ function getpackagelist()
    return $options;	
 }
 
+function getwheresearchv2($field)
+{
+  $where = "WHERE ";
+  $warray = array();
+  $warray2 = array();
+
+  if($_GET['search']!='')
+  {
+    $search = $_GET['search'];
+   
+    foreach($field as $f)
+    {
+        $warray[]  = "$f LIKE '%$search%'";
+    }
+  }
+
+  $matic = 0;
+  foreach($field as $f){
+  		if(!empty($_GET[$f])){
+  			$warray2[]  = "$f = '{$_GET[$f]}'";
+  		}		
+
+  }
+
+  if(count($warray)){
+  	$where .= "(".implode(" OR ", $warray).")";
+  }
+  
+   if(count($warray2)){
+   	if(count($warray)){
+   		$where .= " AND ";
+
+   	}
+  	$where .= implode(" AND ", $warray2)." ";
+  }
+
+
+  if(trim($where)=='WHERE'){
+  		return ;
+  	}
+
+  return $where;	
+}
+
 function getwheresearch($field)
 {
+
+return getwheresearchv2($field);
+
 
   $where = "WHERE";
   if($_GET['search']!='')
@@ -226,13 +273,25 @@ function getwheresearch($field)
         $where = str_replace("OR 1=1","",$where);
   }
 
+$matic = 0;
   foreach($field as $f){
+
   		if(!empty($_GET[$f])){
   			$where .= " $f = '{$_GET[$f]}' OR";	
   		}		
+  		$matic++;
+
   }
-	$where .= " 1=1 ";
+  	if(!empty($matic)){
+
+ 	$where .= " OR 1=1 ";
 	$where = str_replace("OR 1=1","",$where);
+
+  	}
+  	if(trim($where)=='WHERE'){
+  		return ;
+  	}
+  	echo $where;
   return $where;	
 }
 

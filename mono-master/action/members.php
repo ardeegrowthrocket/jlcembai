@@ -81,6 +81,35 @@ if($_POST['submit']!='' && $_POST['task']=='loan-delete-delete')
 
 if($_POST['submit']!='' && $_POST['task']=='processsavings')
 {
+
+if($_REQUEST['ptype']!='savings'){
+
+
+$with =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM tbl_passbook WHERE user='{$_REQUEST['id']}' AND ptype='withdraw'"));
+$save =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM tbl_passbook WHERE user='{$_REQUEST['id']}' AND ptype='savings'"));
+
+$w = $with['total'];
+$s = $save['total'];
+$total = $s - $w;
+
+
+if($_REQUEST['amount']>$total){
+
+	$_SESSION['noti'] = "Unable to process withdrawal. Amount is insufficient";
+	moveredirect($_POST['refer'].'#tabs-3');
+	exit();
+
+}
+
+
+
+}
+
+
+
+
+
+
 	$tbl = "tbl_passbook";
 	$sqli = mysql_query_md_insert("INSERT INTO $tbl SET createdby='{$_SESSION['username']}',actual='{$_REQUEST['actual']}',amount='{$_REQUEST['amount']}',remarks='{$_REQUEST['remarks_payment']}',ptype='{$_REQUEST['ptype']}',user='{$_REQUEST['id']}'");
 
@@ -255,9 +284,9 @@ if($_POST['submit']!='' && $_POST['task']=='loan-save')
 	$_POST['loop_amount'] = $_POST['net'] / $_POST['loop_number'];
 
 	$_POST['interest_amount'] = ($_POST['amount'] * percentget($_POST['interest']));
-	
-	$fields = formquery($_POST);
 	$_POST['createdby'] = $_SESSION['username'];
+	$fields = formquery($_POST);
+	
 	$_SESSION['noti'] = "Done adding loan data.";
 	$refresh = 1;
 	$sqli = mysql_query_md_insert("INSERT INTO $tbl SET $fields");
@@ -481,7 +510,7 @@ if($_POST['submit']!='' && $_POST['task']=='mutual-save')
 
 
 
-	moveredirect("index.php?id={$sqli}&uid={$_POST['user']}&task=loan-edit&pages=".$_REQUEST['pages']);
+	moveredirect("index.php?id={$sqli}&uid={$_POST['user']}&task=mutual-edit&pages=".$_REQUEST['pages']);
 	#moveredirect("index.php?id={$_POST['user']}&task=edit&pages=".$_REQUEST['pages']);
 
 
