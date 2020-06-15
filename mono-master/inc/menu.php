@@ -77,6 +77,12 @@
                <li>
                   <a href="index.php?pages=report&task=withdraw">Withdrawals</a>
                </li>
+               <li>
+                  <a href="index.php?pages=report&task=expenses">Expenses</a>
+               </li>
+               <li>
+                  <a href="index.php?pages=report&task=cashflow">Cash Monitoring</a>
+               </li>
 
             </ul>
          </li>

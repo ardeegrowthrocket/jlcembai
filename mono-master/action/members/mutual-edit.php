@@ -107,7 +107,11 @@ if($show) {
       </form>
    </div>
 </div> 
-
+<style>
+.overdue {
+  background-color: #efa3a3!important;
+}
+</style>
 
 
 
@@ -163,8 +167,20 @@ if($show) {
                      $vd = addslashes($vd);
                      $json_loan[] = "tableloandata-{$kd}='$vd'";
                     }
+
+
+
+
+                    $overdue = 0;
+
+                    if(strtotime($row['schedule']) <= strtotime(date("Y-m-d")) && $row['is_paid']!='yes'){
+
+                        $overdue = 1;
+
+                    }
+
                   ?>
-               <tr id='loandataajax<?php echo $row['id']; ?>' <?php echo implode(" ",$json_loan); ?>>
+               <tr class='<?php if($overdue) { echo "overdue"; } ?>' id='loandataajax<?php echo $row['id']; ?>' <?php echo implode(" ",$json_loan); ?>>
                   <td><?php echo $schedule; ?></td>
                   <td><?php echo number_format($row['payment'],2); ?></td>
                   <td><?php echo number_format($row['penalty'],2); ?></td>

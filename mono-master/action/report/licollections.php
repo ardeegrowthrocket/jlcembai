@@ -64,6 +64,8 @@ foreach($field as $ff){
                   
                   <th>Name</th>
                   <th>Amount</th>
+                  <th>Schedule Date</th>
+                  <th>Actual Payment Date</th>
                   <th>C/O</th>           
                   <th>Action</th>
                </tr>
@@ -72,17 +74,19 @@ foreach($field as $ff){
                <?php
                   while($row=mysql_fetch_md_array($q))
                   {
-                    $pid = $row['id'];
+                    $pid = $row['loan_id'];
                     $balance = ($row['loop_number'] - $row['loop_paid']) * $row['loop_amount'];
                   ?>
                <tr>
                   <td><?php echo $row['name']; ?></td>
                   <td><?php echo $row['payment']; ?></td>
+                  <td><?php echo date("Y-m-d",strtotime($row['schedule'])); ?></td>
+                  <td><?php echo date("Y-m-d",strtotime($row['actual'])); ?></td>
                   <td><?php echo $row['createdby']; ?></td>
 
 
                   <td>
-                     <input onclick="window.location='<?php echo "?pages=".'members'."&task=mutual-edit&id=$pid&uid={$row['user']}"; ?>';" type="button" class="btn btn-primary btn-sm" value="View Details">
+                     <input onclick="window.location='<?php echo "?pages=".'members'."&task=mutual-edit&id=$pid&uid={$row['user_id']}"; ?>';" type="button" class="btn btn-primary btn-sm" value="View Details">
                   </td>
                </tr>
                <?php

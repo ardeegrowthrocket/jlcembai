@@ -52,7 +52,7 @@ foreach($field as $ff){
     display:none;
 }
 </style>
-<h2>Daily Collection</h2>
+<h2>JLC Collection</h2>
 
 
 <p class='headerprint' style='display:none;'>Daily JLC Collection</p>

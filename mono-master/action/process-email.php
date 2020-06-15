@@ -15,7 +15,7 @@ $row = mysql_fetch_md_assoc($q);
 $to = $row['email'];
 $subject = "Password Retrieval";
 $txt = "Here is your password:".$row['password'];
-$headers = "From: noreply@mccportal-ph.com" . "\r\n" .
+$headers = "From: noreply@jlcembai.com" . "\r\n" .
 "CC: ardeenathanraranga@gmail.com";
 mail($to,$subject,$txt,$headers);	
 }

@@ -125,6 +125,7 @@ foreach($field as $ff){
                   <th>Address</th>
                   <th>Label</th>
                   <th>Amount</th>
+                  <th>Deadline</th>
                   <th>Action</th>
                </tr>
             </thead>
@@ -147,7 +148,7 @@ foreach($field as $ff){
                   <td><?php echo $csvrow[] = $row['address']; ?></td>
                   <td><?php echo $csvrow[] = $row['custom_label']; ?></td>
                   <td><?php echo $csvrow[] = number_format($row['payment'],2); ?></td>
- 
+                  <td><?php echo date("Y-m-d",strtotime($row['schedule'])); ?></td>
 
                   <td><a href='<?php echo "?pages=members&task=loan-edit&id={$row['loan_id']}&uid={$row['user_id']}"; ?>' target="_newtab" class='btn btn-primary btn-sm'>View</a></td>                 
                </tr>

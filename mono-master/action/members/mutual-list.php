@@ -60,7 +60,7 @@ foreach($field as $ff){
                <tr>
                   <td><?php echo number_format($row['amount'],2); ?></td>
                   <td><?php echo number_format($row['net'],2);  ?></td>
-                  <td><?php echo $row['terms']; ?> Years</td>
+                  <td><?php echo ($row['terms'] / 12); ?> Years</td>
                   <td><?php echo $row['payment_type']; ?></td>
 <!--                   <td><?php echo $row['penalty']; ?>%</td> -->
                   <td>

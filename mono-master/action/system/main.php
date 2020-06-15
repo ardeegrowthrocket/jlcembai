@@ -13,7 +13,7 @@
 
 $field[] = array("type"=>"editor","value"=>"mission");
 $field[] = array("type"=>"editor","value"=>"vision");
-
+$field[] = array("type"=>"text","value"=>"email","label"=>"Receiver of contact form.");
 #var_dump(generatedate($sdata));
 
 ?>

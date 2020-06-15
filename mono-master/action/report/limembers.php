@@ -84,9 +84,9 @@ foreach($field as $ff){
                   <td><?php echo $row['custom_label']; ?></td>
 
                   <td><?php echo number_format($row['amount'],2); ?></td> 
-                  <td><?php echo $row['terms']; ?> Years</td>
+                  <td><?php echo ($row['terms'] / 12); ?> Years</td>
                   <td><?php echo number_format($balance,2); ?></td>
-                  <td><?php echo $row['remarks']; ?></td>
+                  <td><?php echo ucfirst($row['payment_type']); ?></td>
 
                   <td>
                      <input onclick="window.location='<?php echo "?pages=".'members'."&task=mutual-edit&id=$pid&uid={$row['user']}"; ?>';" type="button" class="btn btn-primary btn-sm" value="View Details">

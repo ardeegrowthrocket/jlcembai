@@ -155,7 +155,8 @@ if($_POST['submit']!='' && $_POST['task']=='processsavings-edit')
 	$current = date("Y-m-d");
 	$amt = number_format($_POST['amount-edit'],2);
 	$remarks = "Withdrawal Release {$amt} for $name - $current";
-
+	mysql_query_md("DELETE FROM tbl_expenses WHERE passbook_id = '{$_REQUEST['editid']}'");
+	
 	if($_REQUEST['ptype-edit']!='savings'){
 	
 	mysql_query_md("DELETE FROM tbl_expenses WHERE passbook_id = '{$_REQUEST['editid']}'");

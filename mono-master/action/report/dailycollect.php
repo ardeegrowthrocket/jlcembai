@@ -34,7 +34,7 @@
 UNION
 SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(2) as tips FROM tbl_schedule_mutual
 UNION
-SELECT id,user,actual,amount,createdby,(0) as loan_id,(3) as tips FROM tbl_passbook WHERE schedule_id IS NULL) as tbl $where");
+SELECT id,user,actual,amount,createdby,(0) as loan_id,(3) as tips FROM tbl_passbook WHERE schedule_id IS NULL AND ptype='savings') as tbl $where");
 
 
  #echo $where;
@@ -46,7 +46,7 @@ $query = "SELECT * FROM (SELECT id,user_id,actual,(payment + penalty + savings) 
 UNION
 SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(2) as tips FROM tbl_schedule_mutual
 UNION
-SELECT id,user,actual,amount,createdby,(0) as loan_id,(3) as tips FROM tbl_passbook WHERE schedule_id IS NULL) as tbl $where ORDER by actual ASC  $limit";
+SELECT id,user,actual,amount,createdby,(0) as loan_id,(3) as tips FROM tbl_passbook WHERE schedule_id IS NULL AND ptype='savings') as tbl $where ORDER by actual ASC  $limit";
 
  $q = mysql_query_md($query);
  $pagecount = getpagecount($total,100000);
