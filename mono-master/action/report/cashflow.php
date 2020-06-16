@@ -1,19 +1,23 @@
 ﻿<?php
  #echo "<a href='?pages=".$_GET['pages']."&task=jlcdaily'>Go back</a>";
  #q = mysql_query_md($query);
- $pagecount = getpagecount($total,100000);
 
-$data_loan =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment + penalty) as total FROM `tbl_schedule` WHERE is_paid = 'yes'"));
+$date = $_GET['date1'];
+if(empty($_GET['date1'])){
+  $date = date("Y-m-d");
+}
 
-$data_mutual =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment + penalty) as total FROM `tbl_schedule_mutual` WHERE is_paid = 'yes'"));
+$data_loan =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment + penalty) as total FROM `tbl_schedule` WHERE is_paid = 'yes' AND actual LIKE '%$date%'"));
 
-$data_savings =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_passbook` WHERE ptype='savings'"));
+$data_mutual =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment + penalty) as total FROM `tbl_schedule_mutual` WHERE is_paid = 'yes' AND actual LIKE '%$date%'"));
 
-$data_withdraw =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_passbook` WHERE ptype='withdraw'"));
+$data_savings =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_passbook` WHERE ptype='savings' AND actual LIKE '%$date%'"));
 
-$data_releases =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_loan` WHERE is_release = 1"));
+$data_withdraw =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_passbook` WHERE ptype='withdraw' AND actual LIKE '%$date%'"));
 
-$data_expenses =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_expenses` WHERE loan_id IS NULL AND passbook_id IS NULL"));
+$data_releases =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_loan` WHERE is_release = 1 AND loan_release LIKE '%$date%'"));
+
+$data_expenses =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_expenses` WHERE loan_id IS NULL AND passbook_id IS NULL AND actual LIKE '%$date%'"));
 
 
 $unpaid = mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule` WHERE is_paid!='yes'"));
@@ -36,7 +40,7 @@ $totaldeduct = array_sum($deduct);
     display:none;
 }
 </style>
-<h2>Cash Flow</h2>
+<h2>Cash Flow as of <?php echo $date; ?></h2>
 
 
 <p class='headerprint' style='display:none;'>Daily Collection Record for - <?php echo $_GET['date1']; ?></p>
@@ -106,12 +110,12 @@ $totaldeduct = array_sum($deduct);
 
 
             </tbody>
-            <tfoot>      
+<!--             <tfoot>      
                   <tr>
                   <td>Total</td>
                   <td><?php echo number_format($total,2); ?></td>
                   </tr>        
-            </tfoot>
+            </tfoot> -->
          </table>
 
 
@@ -129,28 +133,27 @@ $totaldeduct = array_sum($deduct);
             <tbody>
                 <tr>
                   <td style='width: 50%;'>Withdrawal from Customer</td>
-                  <td><?php echo number_format($data_withdraw['total'],2); ?></td>
+                  <td>-<?php echo number_format($data_withdraw['total'],2); ?></td>
                 </tr>
 
                 <tr>
                   <td>Loan Releases</td>
-                  <td><?php echo number_format($data_releases['total'],2); ?></td>
+                  <td>-<?php echo number_format($data_releases['total'],2); ?></td>
                 </tr>
                 <tr>
                   <td>Other Expenses</td>
-                  <td><?php echo number_format($data_expenses['total'],2); ?></td>
+                  <td>-<?php echo number_format($data_expenses['total'],2); ?></td>
                 </tr>
 
 
             </tbody>
-            <tfoot>      
+<!--             <tfoot>      
                   <tr>
                   <td>Total</td>
                   <td><?php echo number_format($totaldeduct,2); ?></td>
                   </tr>        
-            </tfoot>
+            </tfoot> -->
          </table>
-
 
 
          <table border='1' class="table table-striped table-bordered table-hover dataTable no-footer">
@@ -158,13 +161,13 @@ $totaldeduct = array_sum($deduct);
 
 
                 <tr>
-                  <td style="width:50%;">Remaning Balance</td>
+                  <td style="width:50%;">Net Balance</td>
                   <td style='color:green'><strong><?php echo number_format(($total - $totaldeduct),2); ?></strong></td>
                 </tr>
-                <tr>
+<!--                 <tr>
                   <td style="width:50%;">Unpaid Loans</td>
                   <td style='color:red'><strong><?php echo number_format(($unpaid['total'] + $unpaid_mutual['total']),2); ?></strong></td>
-                </tr>
+                </tr> -->
 
 
 
