@@ -1,5 +1,5 @@
 <?php
-	require("mono-master/connect.php");
+	require("loandashboard/connect.php");
 
 
 
@@ -26,8 +26,6 @@ $vision =mysql_fetch_md_array(mysql_query_md("SELECT * FROM `tbl_system` WHERE c
     <meta name="author" content="">
 
     <!-- Site Icons -->
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -38,7 +36,8 @@ $vision =mysql_fetch_md_array(mysql_query_md("SELECT * FROM `tbl_system` WHERE c
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/custom.css">
 	<script src="js/modernizr.js"></script> <!-- Modernizr -->
-
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -59,7 +58,7 @@ $vision =mysql_fetch_md_array(mysql_query_md("SELECT * FROM `tbl_system` WHERE c
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
       <div class="container">
         <a class="navbar-brand js-scroll-trigger" href="#page-top">
-			<img class="img-fluid" src="logo.jpg" alt="" style='width: 66px;' />
+			<img class="img-fluid" src="loandashboard/logo.png" alt="" style='width: 66px;' />
 		</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           Menu

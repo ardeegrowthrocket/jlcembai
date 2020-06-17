@@ -1,5 +1,5 @@
 <?php
-require("mono-master/connect.php");
+require("../loandashboard/connect.php");
 
 $mission =mysql_fetch_md_array(mysql_query_md("SELECT * FROM `tbl_system` WHERE code='email'"));
 // Check for empty fields
