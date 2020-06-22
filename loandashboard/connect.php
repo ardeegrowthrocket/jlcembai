@@ -1,12 +1,53 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
 
-
+// function permission(){
+//     mysql_query_md_insert("INSERT INTO tbl_permission SET submit='{$_REQUEST['submit']}',pages='{$_REQUEST['pages']}',task='{$_REQUEST['task']}'");
+// }
+// permission();
 function moveredirect($url){
   echo "<script> window.location = '{$url}'; </script>";
 }
-function mysql_query_md($q){
 
+function recordsql($q){
+
+  $querydata = addslashes($_SESSION['username']."==".$q);
+  $query = "INSERT INTO tbl_sql SET querydata='{$querydata}'";
+
+$a = strtolower($q);
+$t = 0;
+if (strpos($a, 'insert') !== false) {
+   $t = 1;
+}
+if (strpos($a, 'delete') !== false) {
+   $t = 1;
+}
+if (strpos($a, 'update') !== false) {
+   $t = 1;
+}
+
+if($t==0){
+  return;
+}
+
+    $mysqli = new mysqli("localhost","root","","jlc");
+    // Check connection
+    if ($mysqli -> connect_errno) {
+      echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
+      exit();
+    }
+    // Perform query
+    if ($result = $mysqli -> query($query)) {
+      // Free result set
+      
+    }
+    $id = $mysqli->insert_id;
+    $mysqli -> close();
+
+}
+
+function mysql_query_md($q){
+  recordsql($q);
   //if($_GET['debug']){
   #echo $q."<hr>";
   //}
@@ -32,7 +73,7 @@ function mysql_query_md($q){
 
 
 function mysql_query_md_insert($q){
-
+    recordsql($q);
     $mysqli = new mysqli("localhost","root","","jlc");
 
     // Check connection

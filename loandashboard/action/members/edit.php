@@ -45,7 +45,7 @@ $field[] = array("type"=>"text","value"=>"custom_label","label"=>"Label");
 <script>
   function tabset(id){
 
-    window.location = 'index.php?pages=members&id=4&task=edit'+jQuery(id).attr('href');
+    window.location = 'index.php?pages=members&id=<?php echo $_GET['id']; ?>&task=edit'+jQuery(id).attr('href');
 
   }
 </script>

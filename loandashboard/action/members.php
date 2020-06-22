@@ -44,7 +44,10 @@ if($_POST['submit']!='' && $_POST['task']=='delete')
 
 
 
-if($_POST['submit']!='' && $_POST['task']=='loan-delete-delete')
+
+
+
+if($_POST['submit']!='' && $_POST['task']=='mutual-delete-delete')
 {
 	$tbl = "tbl_mutual";
 	mysql_query_md("DELETE FROM $tbl WHERE $primary=".$_POST[$primary]);
