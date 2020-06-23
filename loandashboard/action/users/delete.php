@@ -11,7 +11,7 @@ while($row=mysql_fetch_md_assoc($query))
 	}
 }
 $field[] = array("type"=>"text","value"=>"username","label"=>"Username","attr"=>"disabled");
-$field[] = array("type"=>"text","value"=>"password","label"=>"Password","attr"=>"disabled");
+//$field[] = array("type"=>"password","value"=>"password","label"=>"Password","attr"=>"disabled");
 $field[] = array("type"=>"email","value"=>"email","label"=>"Email","attr"=>"disabled");
 ?>
 <h2>Are you sure you want to delete?</h2>

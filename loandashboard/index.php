@@ -104,6 +104,10 @@ if($_SESSION['noti']){
     <?php
    
 }
+
+
+
+
 		$currpage = $_GET['pages'];
 		if($currpage=='')
 		{
@@ -114,7 +118,8 @@ if($_SESSION['noti']){
 
   
 					 
-					 
+		
+
 					 
 					 
 					 
@@ -124,6 +129,26 @@ if($_SESSION['noti']){
 					 
                     </div>
                 </div>
+
+
+
+<?php 
+
+
+  foreach(getarrayconfig('weeklyterms') as $k=>$v){
+    ?>
+    <input type='hidden' id='amtweekly<?php echo $k; ?>' value='<?php echo $v; ?>'>
+    <?php
+  }
+
+
+?>
+
+
+
+
+
+
                  <!-- /. ROW  -->
                  <hr />
                
@@ -169,12 +194,20 @@ jQuery( "#payment_type" ).change(function() {
   if(jQuery( "#payment_type" ).val()=="weekly"){
       jQuery("tr.members-loan-helper").show();
       jQuery("tr.members-loan-edit-helper").show();
+      jQuery("tr.members-loan-weeklyamount").show();
+      jQuery("tr.members-loan-edit-weeklyamount").show();
+
+
       jQuery("tr.members-mutual-helper").show();
       jQuery("tr.members-mutual-edit-helper").show();
 
   }else{
        jQuery("tr.members-loan-helper").hide();
        jQuery("tr.members-loan-edit-helper").hide();
+      jQuery("tr.members-loan-weeklyamount").hide();
+      jQuery("tr.members-loan-edit-weeklyamount").hide();
+
+
        jQuery("tr.members-mutual-helper").hide();
        jQuery("tr.members-mutual-edit-helper").hide();       
   }
@@ -189,15 +222,36 @@ function autogenloan(){
 
 //interest_amount  net
   if(jQuery('#amount').length){
+
+
+
     var amount = parseFloat(jQuery('#amount').val());
     var interest = parseFloat(jQuery('#interest').val()) / 100;
 
     var interest_amount = interest * amount;
     var net = interest_amount + amount;
 
+    var terms = parseFloat(jQuery('#terms').val()) * 4;
 
+    if(jQuery('#amtweekly'+jQuery('#terms').val()).length){
+
+       var terms = jQuery('#amtweekly'+jQuery('#terms').val()).val();
+
+    }
+
+
+
+    var termspayment = net / terms;
+
+
+
+
+
+    
     jQuery('#interest_amount').val(interest_amount.toFixed(2));
     jQuery('#net').val(net.toFixed(2));
+    jQuery('#weeklyamount').val(termspayment.toFixed(2));
+    
 
   }
 
@@ -232,6 +286,7 @@ function printData(idtoprint)
 
 </script>
  
+
    
 </body>
 </html>

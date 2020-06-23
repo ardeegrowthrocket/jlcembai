@@ -86,6 +86,10 @@
                <li>
                   <a href="index.php?pages=report&task=cf">Cash Monitoring Records</a>
                </li>
+               <li>
+                  <a href="index.php?pages=report&task=offset">Offset Records</a>
+               </li>
+
             </ul>
          </li>
 

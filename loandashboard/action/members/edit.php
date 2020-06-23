@@ -24,7 +24,10 @@ $field[] = array("type"=>"text","value"=>"contact");
 $field[] = array("type"=>"text","value"=>"spouse");
 $field[] = array("type"=>"text","value"=>"occupation");
 $field[] = array("type"=>"text","value"=>"dependents");
-
+$release = array();
+$release['0'] = "No";
+$release['1'] = "Yes";
+$field[] = array("type"=>"select","value"=>"is_offset","label"=>"User Is Offset?","option"=>$release);
 
 $field[] = array("skip"=>"text","label"=>"CO MAKER 1");
 $field[] = array("type"=>"text","value"=>"name1","label"=>"Name");
@@ -50,8 +53,18 @@ $field[] = array("type"=>"text","value"=>"custom_label","label"=>"Label");
   }
 </script>
 
-
-
+<style>
+.is_offset {
+    background-color: red;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+}
+</style>
+<br/>
+<?php if($sdata['is_offset']) { ?>
+<div class='is_offset'><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> This user is marked as offset</div><br/>
+<?php } ?>
 <div id="tabs">
   <ul>
     <li><a onclick="tabset(this)" href="#tabs-1">Member Information</a></li>

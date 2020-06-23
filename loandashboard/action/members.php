@@ -273,7 +273,12 @@ if($_POST['submit']!='' && $_POST['task']=='loan-save')
 
 
 	if($_POST['payment_type']=='weekly'){
+		$weeklyterms = getarrayconfig('weeklyterms');
 		$_POST['loop_number'] =  ($_POST['terms'] * 4);
+
+		if(!empty($weeklyterms[$_POST['terms']])){
+			$_POST['loop_number'] = $weeklyterms[$_POST['terms']];
+		}
 	}
 	if($_POST['payment_type']=='monthly'){
 		$_POST['loop_number'] =  ($_POST['terms'] * 1);
@@ -319,18 +324,57 @@ if($_POST['submit']!='' && $_POST['task']=='loan-save')
 
 
 
+	$counter = 0;
+	$pretotal = 0;
+	$truetotal = 0;
+
 	foreach($date as $s){
+		$counter++;
 
 		$array = array();
 
 		$array['schedule'] = $s;
 		$array['payment'] = $_POST['loop_amount'];
+
+
+
+		if($_POST['payment_type']=='weekly'){
+			
+			$array['payment'] = $_POST['weeklyamount'];
+
+			$pretotal = $pretotal + $array['payment']; 
+			if($pretotal>$_POST['net']){
+				$newprice = $_POST['net'] - ($pretotal - $_POST['weeklyamount']);
+				$array['payment'] = $newprice;
+			}
+
+			if($array['payment']<0){
+				$array['payment'] = 0;
+			}	
+
+			$truetotal = $truetotal + $array['payment']; 
+
+			//echo "$counter === $truetotal === {$array['payment']} <Br>";
+			
+		}
+
+
+
 		$array['user_id'] = $_POST['user'];
 		$array['loan_id'] = $sqli;
 		$fieldsv2 = formquery($array);
+
+
+
+
+
+
+
+
 		mysql_query_md("INSERT INTO tbl_schedule SET $fieldsv2");
 
 	}
+
 
 
 
@@ -360,8 +404,14 @@ if($_POST['submit']!='' && $_POST['task']=='loan-edit-save')
 	$_POST['net'] = $_POST['amount'] + ($_POST['amount'] * percentget($_POST['interest']));
 
 
+
 	if($_POST['payment_type']=='weekly'){
+		$weeklyterms = getarrayconfig('weeklyterms');
 		$_POST['loop_number'] =  ($_POST['terms'] * 4);
+
+		if(!empty($weeklyterms[$_POST['terms']])){
+			$_POST['loop_number'] = $weeklyterms[$_POST['terms']];
+		}
 	}
 	if($_POST['payment_type']=='monthly'){
 		$_POST['loop_number'] =  ($_POST['terms'] * 1);
@@ -412,6 +462,28 @@ if($_POST['submit']!='' && $_POST['task']=='loan-edit-save')
 
 		$array['schedule'] = $s;
 		$array['payment'] = $_POST['loop_amount'];
+
+		if($_POST['payment_type']=='weekly'){
+			
+			$array['payment'] = $_POST['weeklyamount'];
+
+			$pretotal = $pretotal + $array['payment']; 
+			if($pretotal>$_POST['net']){
+				$newprice = $_POST['net'] - ($pretotal - $_POST['weeklyamount']);
+				$array['payment'] = $newprice;
+			}
+
+
+			if($array['payment']<0){
+					$array['payment'] = 0;
+			}	
+
+
+			$truetotal = $truetotal + $array['payment']; 
+			
+		}
+
+
 		$array['user_id'] = $_POST['user'];
 		$array['loan_id'] = $_POST['id'];
 		$fieldsv2 = formquery($array);

@@ -34,6 +34,8 @@ $field[] = array("type"=>"text","value"=>"email","label"=>"Receiver of contact f
          <?php echo multiformconfig("mutualterms","Mutual Fund Years",$sdata['mutualterms']); ?>
 
 
+         <?php echo multiformconfig("weeklyterms","Weekly Statics",$sdata['weeklyterms']); ?>
+
          <center><input class='btn btn-primary btn-lg' type='submit' name='submit' value='Save Configuration'></center>
       </form>
    </div>

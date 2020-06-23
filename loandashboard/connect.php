@@ -1,14 +1,13 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
 
-// function permission(){
-//     mysql_query_md_insert("INSERT INTO tbl_permission SET submit='{$_REQUEST['submit']}',pages='{$_REQUEST['pages']}',task='{$_REQUEST['task']}'");
-// }
-// permission();
 function moveredirect($url){
   echo "<script> window.location = '{$url}'; </script>";
 }
 
+function getconnection(){
+  return new mysqli("localhost","root","","jlc");
+}
 function recordsql($q){
 
   $querydata = addslashes($_SESSION['username']."==".$q);
@@ -30,7 +29,7 @@ if($t==0){
   return;
 }
 
-    $mysqli = new mysqli("localhost","root","","jlc");
+    $mysqli = getconnection();
     // Check connection
     if ($mysqli -> connect_errno) {
       echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
@@ -49,9 +48,9 @@ if($t==0){
 function mysql_query_md($q){
   recordsql($q);
   //if($_GET['debug']){
-  #echo $q."<hr>";
+  //echo $q."<hr>";
   //}
-		$mysqli = new mysqli("localhost","root","","jlc");
+		$mysqli = getconnection();
 
 		// Check connection
 		if ($mysqli -> connect_errno) {
@@ -74,7 +73,7 @@ function mysql_query_md($q){
 
 function mysql_query_md_insert($q){
     recordsql($q);
-    $mysqli = new mysqli("localhost","root","","jlc");
+    $mysqli = getconnection();
 
     // Check connection
     if ($mysqli -> connect_errno) {
@@ -227,8 +226,15 @@ $given_num = $postarray['loop_number'];
 $for_start = strtotime($given_day, $given_date);
 $for_end = strtotime('+'.$given_num.' week', $given_date);
 // $for_end = strtotime($postarray['edate']);
+
+
+$counter = 0;
 for ($i = $for_start; $i <= $for_end; $i = strtotime('+1 week', $i)) {
+    $counter++;
     $payment[] = date('Y-m-d', $i);
+    if($counter==$given_num){
+        break;
+    }
 }
 
 }
@@ -341,9 +347,11 @@ for ($i = $for_start; $i <= $for_end; $i = strtotime('+1 week', $i)) {
 
                      else
                      {
-					
-
-						$return .= "<input required {$inputs['attr']} type=\"{$inputs['type']}\" name=\"{$inputs['value']}\" id=\"{$inputs['value']}\" size=\"40\" maxlength=\"255\" value=\"{$sdata[$inputs['value']]}\" />";
+					           $stepany = '';
+                      if($inputs['type']=='number'){
+                        $stepany = "step='any'";
+                      }
+						$return .= "<input $stepany required {$inputs['attr']} type=\"{$inputs['type']}\" name=\"{$inputs['value']}\" id=\"{$inputs['value']}\" size=\"40\" maxlength=\"255\" value=\"{$sdata[$inputs['value']]}\" />";
 
 						$return .= "<span class=\"validation-status\"></span>";
 

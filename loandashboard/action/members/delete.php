@@ -24,7 +24,10 @@ $field[] = array("type"=>"text","value"=>"contact");
 $field[] = array("type"=>"text","value"=>"spouse");
 $field[] = array("type"=>"text","value"=>"occupation");
 $field[] = array("type"=>"text","value"=>"dependents");
-
+$release = array();
+$release['0'] = "No";
+$release['1'] = "Yes";
+$field[] = array("type"=>"select","value"=>"is_offset","label"=>"User Is Offset?","option"=>$release);
 
 $field[] = array("skip"=>"text","label"=>"CO MAKER 1");
 $field[] = array("type"=>"text","value"=>"name1","label"=>"Name");
@@ -42,6 +45,7 @@ $field[] = array("skip"=>"text","label"=>"CUSTOM LABEL");
 $field[] = array("type"=>"text","value"=>"custom_label","label"=>"Label");
 
 ?>
+
 <h2>Delete Member - <?php echo $sdata['name'];?> </h2>
 <div class="panel panel-default">
    <div class="panel-body">

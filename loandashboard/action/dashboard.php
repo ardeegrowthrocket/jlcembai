@@ -210,6 +210,15 @@ ul.menuboard li {
           </a>
         </li>
 
+        <li>
+          <a href='index.php?pages=report&task=offset'>
+          <i class="fa fa-user-times  fa-2" aria-hidden="true"></i>
+          <br/>
+          <span>Offset Users</span>
+          </a>
+        </li>
+
+
       </ul>
 </div>
 </div>
