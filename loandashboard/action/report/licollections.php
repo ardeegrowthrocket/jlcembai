@@ -1,14 +1,31 @@
 ﻿<?php
  $field = array("name","address","contact","custom_label","is_paid");
  $_GET['is_paid'] = 'yes';
+  $datefield = "actual";
+
+if($_GET['date1'] != ''){
+
+    if(empty($where)){
+
+      $where = "WHERE $datefield LIKE '%{$_GET['date1']}%'";
+    }else{
+
+      $where .= "AND $datefield LIKE '%{$_GET['date1']}%'";
+    }
+
+ }
+
+
+
+
  $where = getwheresearch($field);
  $total = countquery("SELECT a.*,name,address,custom_label,contact FROM tbl_schedule_mutual as a LEFT JOIN tbl_members as b ON b.id=a.user_id $where");
  //primary query
- $limit = getlimit(10,$_GET['p']);
+ $limit = getlimit(100,$_GET['p']);
  $query = "SELECT a.*,name,address,custom_label,contact FROM tbl_schedule_mutual as a LEFT JOIN tbl_members as b ON b.id=a.user_id $where $limit";
 
  $q = mysql_query_md($query);
- $pagecount = getpagecount($total,10);
+ $pagecount = getpagecount($total,100);
 
 
 $field_data = array();
@@ -39,10 +56,41 @@ foreach($field as $ff){
                     <?php unset($field_data[4]); ?>
                     Search by: <?php echo (implode(", ", $field_data)); ?>
                     <form method=''>
-                    <input type='text' value='<?php echo $_GET['search']; ?>' name='search'>
+
+
+                    <table>
+<!--                     
+
+
+                      <tr>
+                        <td>From:</td>
+                        <td><input type='date' value='<?php echo $_GET['date1']; ?>' name='date1'></td>
+                      </tr>  -->    
+
+
+
+                      <tr>
+                        <td>Search Keyword:</td>
+                        <td><input type='text' value='<?php echo $_GET['search']; ?>' name='search'></td>
+                      </tr>
+
+                      <tr>
+                        <td>To:</td>
+                        <td><input type='date' value='<?php echo $_GET['date1']; ?>' name='date1'></td>
+                      </tr>    
+
+
+                    </table>
+
+
+                 
                     <input type='hidden' value='<?php echo $_GET['task']; ?>' name='task'>
                     <input type='hidden' name='pages' value='<?php echo $_GET['pages'];?>'>
                     <input type='submit' name='search_button' class="btn btn-primary"/>
+
+
+
+
 
                     <?php if($_GET['search_button']) {  ?>
                       <input type='button' onclick="window.location = 'index.php?pages=<?php echo $_GET['pages'];?>&task=<?php echo $_GET['task'];?>'" name='cleaar' value="Clear Search " class="btn btn-primary"/>
@@ -93,6 +141,24 @@ foreach($field as $ff){
                   }
                   ?>
             </tbody>
+            <tfoot>
+                   <?php  
+                  if (!empty($totalamount)) {
+                    $totalamount = number_format($totalamount,2);
+
+                    $csv[] = array("Total :".$totalamount);
+                    echo "<tr><td colspan='3'>Total : {$totalamount}</td></tr>";
+                  }
+
+
+
+
+                  createcsv($csv,$_GET['date1'].$_GET['task']);
+                  ?>                
+            </tfoot>
+
+
+
          </table>
       </div>
             <div class="row">

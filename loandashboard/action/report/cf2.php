@@ -1,53 +1,44 @@
 ﻿<?php
- #echo "<a href='?pages=".$_GET['pages']."&task=jlcdaily'>Go back</a>";
+
  #$_GET['is_paid'] = 'yes';  
- $field = array("name","address","contact","amount");
+ $field = array("amount","remarks","is_paid");
  $where = getwheresearch($field);
 
 
- $datefield = "loan_release";
+ $datefield = "actual";
 
 
+ if($_GET['date1'] == ''){
+  $_GET['date1'] = date("Y-m-d");
+ }
 
- if($_GET['date1'] != '' && $_GET['date2'] != ''){
+ if($_GET['date1'] != ''){
 
     if(empty($where)){
 
-      $where = "WHERE $datefield BETWEEN '{$_GET['date1']} 00:00:00' and '{$_GET['date2']} 23:00:00'";
+      $where = "WHERE $datefield LIKE '%{$_GET['date1']}%'";
     }else{
 
-      $where .= "AND $datefield BETWEEN '{$_GET['date1']} 00:00:00' and '{$_GET['date2']} 23:00:00'";
+      $where .= "AND $datefield LIKE '%{$_GET['date1']}%'";
     }
 
  }
 
 
 
-    if(empty($where)){
 
-      $where = "WHERE loop_paid != loop_number";
-    }else{
-
-      $where .= "AND loop_paid != loop_number";
-    }
-
-
-
-
-
-
- $total = countquery("SELECT a.id FROM tbl_loan as a LEFT JOIN tbl_members as b ON a.user=b.id $where");
+ $total = countquery("SELECT CONCAT(YEAR(actual),\"-\",MONTH(actual),\"-\",DAY(actual)) as filter FROM `tbl_schedule_mutual` WHERE is_paid = 'yes' GROUP by filter");
 
 
  #echo $where;
 
  //primary query
- $limit = getlimit(20,$_GET['p']);
+ $limit = getlimit(100,$_GET['p']);
 
-  $query = "SELECT a.*,name,address,contact,custom_label,a.id as loanid FROM tbl_loan as a LEFT JOIN tbl_members as b ON a.user=b.id $where ORDER by loan_release ASC  $limit";
+$query = "SELECT CONCAT(YEAR(actual),\"-\",MONTH(actual),\"-\",DAY(actual)) as filter FROM `tbl_schedule_mutual` WHERE is_paid = 'yes' GROUP by filter ORDER by filter DESC";
 
  $q = mysql_query_md($query);
- $pagecount = getpagecount($total,20);
+ $pagecount = getpagecount($total,100);
 
 
 $field_data = array();
@@ -61,10 +52,10 @@ foreach($field as $ff){
     display:none;
 }
 </style>
-<h2>Loan Balance</h2>
+<h2>Cashflow Data - LI</h2>
 
 
-<p class='headerprint' style='display:none;'>Loan Release Record for - <?php echo $_GET['date1']; ?></p>
+<p class='headerprint' style='display:none;'>Daily JLC Collection</p>
 <div class="panel panel-default">
    <div class="panel-body">
          <div class="row">
@@ -72,43 +63,26 @@ foreach($field as $ff){
             <div class="col-md-12">
                <div class="panel panel-default">
                   <div class="panel-body">
-                    Filter the date per day.
-
-
+                  <!-- 
                     <form method=''>
-                    <table>
-<!--              
-
-
-  -->  
-
-                     <tr>
-                        <td>Search Keyword:</td>
-                        <td><input type='text' value='<?php echo $_GET['search']; ?>' name='search'></td>
-                      </tr>
-
-<!--                       <tr>
+                    <table>                
+                      <tr>
                         <td>To:</td>
                         <td><input type='date' value='<?php echo $_GET['date1']; ?>' name='date1'></td>
                       </tr>    
-                      <tr>
-                        <td>From:</td>
-                        <td><input type='date' value='<?php echo $_GET['date2']; ?>' name='date2'></td>
-                      </tr> -->
+
 
                     </table>
                     <br/>
                     <input type='hidden' name='pages' value='<?php echo $_GET['pages'];?>'>
                     <input type='hidden' name='task' value='<?php echo $_GET['task'];?>'>                    
-                    <input type='submit' name='search_button' class="btn btn-primary"/>
+                    <input type='submit' name='search_button' class="btn btn-primary"/> -->
 
+                    <input value="Print as PDF" onclick="printData('dataTables-example')" type='button' name='print' class="btn btn-primary"/>
 
 
                     <input value="Print as CSV" onclick="window.location='uploads/<?php echo $_GET['date1'].$_GET['task']; ?>.csv';" type='button' name='print' class="btn btn-primary"/>
 
-                    <?php if($_GET['search_button']) {  ?>
-                      <input type='button' onclick="window.location = 'index.php?pages=<?php echo $_GET['pages'];?>&task=<?php echo $_GET['task'];?>'" name='cleaar' value="Clear Search " class="btn btn-primary"/>
-                    <?php } ?>
 
                     </form>
                   </div>
@@ -122,12 +96,7 @@ foreach($field as $ff){
          <table border='1' class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables-example">
             <thead>
                <tr role='row'>
-                  <th>Name</th>
-                  <th>Address</th>
-                  <th>Label</th>
-                  <th>Balance</th>
-                  <th>C/O</th>
-                  <th>Action</th>
+                  <th>Date</th>
                </tr>
             </thead>
             <tbody>
@@ -135,25 +104,26 @@ foreach($field as $ff){
                $totalamount = 0;
                $csv = array();
 
-               $csv[] = array("Name","Address","Label","Balance","C/O");
+               $csv[] = array("Date");
                   while($row=mysql_fetch_md_array($q))
                   {
 
                     $csvrow = array();
-                    $interest_amount = ($row['amount'] * percentget($row['interest']));
-                    $balance = ($row['loop_number'] - $row['loop_paid']) * $row['loop_amount'];
-                     $bal=mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule` WHERE loan_id = {$row['loanid']} AND is_paid = 'no'"));
-                    $balance = $bal['total'];                   
+                    $pid = $row['id'];
+  
+
+
+
+
+                    
                   ?>
                <tr>
-                  <td><?php echo $csvrow[] = $row['name']; ?></td>
-                  <td><?php echo $csvrow[] = $row['address']; ?></td>
-                  <td><?php echo $csvrow[] = $row['custom_label']; ?></td>
-                  <td><?php echo $csvrow[] = number_format($balance,2); ?></td>
-                  <td><?php echo $csvrow[] = $row['createdby']; ?></td>
- 
-
-                  <td><a href='<?php echo "?pages=members&task=loan-edit&id={$row['id']}&uid={$row['user']}"; ?>' target="_newtab" class='btn btn-primary btn-sm'>View</a></td>                 
+                  <td>
+                    <a href='index.php?pages=report&task=cashflow&date1=<?php echo date("Y-m-d",strtotime($row['filter'])); ?>'>
+                    <?php echo $csvrow[] = date("Y-m-d",strtotime($row['filter'])); ?>
+                    </a>
+                  </td>
+                  
                </tr>
                <?php
                   $csv[] = $csvrow;
@@ -198,7 +168,7 @@ foreach($field as $ff){
                           {
                             $active = 'active';
                           }
-                          $url = "?search=".$_GET['search']."&pages=".$_GET['pages']."&search_button=Submit&p=".$c;
+                          $url = "?search=".$_GET['search']."&pages=".$_GET['pages']."&search_button=Submit&task={$_GET['task']}&p=".$c;
                       ?>
                         <li class="paginate_button <?php echo $active; ?>" aria-controls="dataTables-example" tabindex="0"><a href="<?php echo $url; ?>"><?php echo $c; ?></a></li>
                       <?php

@@ -338,7 +338,7 @@ if($_POST['submit']!='' && $_POST['task']=='loan-save')
 
 
 
-		if($_POST['payment_type']=='weekly'){
+		if($_POST['payment_type']!='abc'){
 			
 			$array['payment'] = $_POST['weeklyamount'];
 
@@ -463,7 +463,7 @@ if($_POST['submit']!='' && $_POST['task']=='loan-edit-save')
 		$array['schedule'] = $s;
 		$array['payment'] = $_POST['loop_amount'];
 
-		if($_POST['payment_type']=='weekly'){
+		if($_POST['payment_type']!='abc'){
 			
 			$array['payment'] = $_POST['weeklyamount'];
 

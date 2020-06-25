@@ -76,9 +76,9 @@ $field[] = array("type"=>"number","value"=>"net","label"=>"Net Amount","attribut
 $field[] = array("type"=>"number","value"=>"penalty","label"=>"Penalty Rate (%)");
 $field[] = array("type"=>"select","value"=>"terms","label"=>"Number of Months","option"=>getarrayconfig('loanterms'),"attributes"=>array("onchange"=>"autogenloan()"));
 
-$field[] = array("type"=>"select","value"=>"payment_type","label"=>"Payment Type","option"=>$ptype);
+$field[] = array("type"=>"select","value"=>"payment_type","label"=>"Payment Type","option"=>$ptype,"attributes"=>array("onchange"=>"autogenloan()"));
 $field[] = array("type"=>"select","value"=>"helper","label"=>"What days of week(for weekly payment)","option"=>$week);
-$field[] = array("type"=>"number","value"=>"weeklyamount","label"=>"Weekly Amount");
+$field[] = array("type"=>"number","value"=>"weeklyamount","label"=>"Amortization Amount");
 $field[] = array("type"=>"date","value"=>"loan_date","label"=>"Loan Date");
 $field[] = array("type"=>"date","value"=>"loan_start","label"=>"Payment Start Date");
 $field[] = array("type"=>"text","value"=>"remarks");

@@ -23,7 +23,7 @@ $data_expenses =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total
 $unpaid = mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule` WHERE is_paid!='yes'"));
 $unpaid_mutual =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule_mutual` WHERE is_paid!='yes'"));
 
-
+$data_mutual['total'] = 0;
 
 
 $added = array($data_loan['total'],$data_mutual['total'],$data_savings['total']);
@@ -97,11 +97,11 @@ $totaldeduct = array_sum($deduct);
                   <td><?php echo number_format($data_loan['total'],2); ?></td>
                 </tr>
 
-                <tr>
+<!--                 <tr>
                   <td>Mutual Fund Collection</td>
                   <td><?php echo number_format($data_mutual['total'],2); ?></td>
                 </tr>
-
+ -->
                 <tr>
                   <td>Savings from Customer</td>
                   <td><?php echo number_format($data_savings['total'],2); ?></td>

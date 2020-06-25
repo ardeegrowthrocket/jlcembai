@@ -4,7 +4,9 @@
 function createcsv($list,$csvname){
 
 $file = fopen("uploads/{$csvname}.csv","w");
-
+if(empty($list)){
+	return;
+}
 foreach ($list as $line) {
 
 	#var_dump($list);

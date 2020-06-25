@@ -22,6 +22,14 @@
 
  }
 
+ if(empty($where)){
+  $where = "WHERE (loan_id IS NULL AND passbook_id IS NULL)";
+ }else{
+  $where .= "AND (loan_id IS NULL AND passbook_id IS NULL)";
+ }
+ 
+
+ 
 $groupby = '';
 if(empty($_GET['filter']))
 {

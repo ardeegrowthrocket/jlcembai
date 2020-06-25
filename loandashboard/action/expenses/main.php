@@ -1,10 +1,11 @@
 ﻿<?php
  $field = array("amount","remarks");
- $where = getwheresearch($field);
- $total = countquery("SELECT id FROM tbl_expenses $where");
+ $_GET['loan_id'] = NULL;
+ $_GET['passbook_id'] = NULL;
 
  $datefield = "actual";
 
+$where = getwheresearch($field);
  if($_GET['date1'] != '' && $_GET['date2'] != ''){
 
     if(empty($where)){
@@ -17,6 +18,13 @@
 
  }
 
+ if(empty($where)){
+  $where = "WHERE (loan_id IS NULL AND passbook_id IS NULL)";
+ }else{
+  $where .= "AND (loan_id IS NULL AND passbook_id IS NULL)";
+ }
+ 
+ $total = countquery("SELECT id FROM tbl_expenses $where");
  #echo $where;
 
  //primary query

@@ -36,7 +36,7 @@
  //primary query
  $limit = getlimit(20,$_GET['p']);
 
-  $query = "SELECT a.*,name,address,contact,custom_label FROM tbl_loan as a LEFT JOIN tbl_members as b ON a.user=b.id $where ORDER by loan_release ASC  $limit";
+  $query = "SELECT a.*,name,address,contact,custom_label,a.id as loanid FROM tbl_loan as a LEFT JOIN tbl_members as b ON a.user=b.id $where ORDER by loan_release ASC  $limit";
 
  $q = mysql_query_md($query);
  $pagecount = getpagecount($total,20);
@@ -136,9 +136,15 @@ foreach($field as $ff){
                   while($row=mysql_fetch_md_array($q))
                   {
 
+
                     $csvrow = array();
                     $interest_amount = ($row['amount'] * percentget($row['interest']));
                     $balance = ($row['loop_number'] - $row['loop_paid']) * $row['loop_amount'];
+
+                    $bal=mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule` WHERE loan_id = {$row['loanid']} AND is_paid = 'no'"));
+                    $balance = $bal['total'];
+
+
                     
                   ?>
                <tr>
