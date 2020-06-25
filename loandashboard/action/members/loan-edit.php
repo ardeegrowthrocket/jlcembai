@@ -242,6 +242,11 @@ if($show) {
        jQuery('#savings_payment').val(ajax.attr('tableloandata-savings'));
        jQuery('#penalty_payment').val(ajax.attr('tableloandata-penalty'));
        
+       if(ajax.attr('tableloandata-is_custom')==1){
+        jQuery('#deleted').show();
+       }else{
+        jQuery('#deleted').hide();
+       }
        
    }
 
@@ -297,7 +302,9 @@ if($show) {
         </div>
         <div class="modal-footer">
          <input class='btn btn-default' type='submit' name='submit' value='Mark as Paid'>
-         <input class='btn btn-default' type='submit' name='submit' value='Delete'>
+         <?php if($_SESSION['role']==1) { ?>
+         <input id='deleted' class='btn btn-default' type='submit' name='submit' value='Delete'>
+         <?php } ?>
          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>
       </div>

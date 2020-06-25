@@ -255,7 +255,7 @@ if($_POST['submit']!='' && $_POST['task']=='processpaycustom')
 
 
 
-	$_REQUEST['schedule_id'] = mysql_query_md_insert("INSERT INTO $tbl SET payment='{$_REQUEST['amount_payment']}',loan_id='{$_REQUEST['loan_id']}',user_id='{$_REQUEST['user_id']}',createdby='{$_SESSION['username']}',schedule='{$_REQUEST['date_payment']}',actual='{$_REQUEST['date_payment']}',savings='{$_REQUEST['savings_payment']}',penalty='{$_REQUEST['penalty_payment']}',remarks='{$_REQUEST['remarks_payment']}',is_paid='yes'");
+	$_REQUEST['schedule_id'] = mysql_query_md_insert("INSERT INTO $tbl SET is_custom=1,payment='{$_REQUEST['amount_payment']}',loan_id='{$_REQUEST['loan_id']}',user_id='{$_REQUEST['user_id']}',createdby='{$_SESSION['username']}',schedule='{$_REQUEST['date_payment']}',actual='{$_REQUEST['date_payment']}',savings='{$_REQUEST['savings_payment']}',penalty='{$_REQUEST['penalty_payment']}',remarks='{$_REQUEST['remarks_payment']}',is_paid='yes'");
 
 
 
