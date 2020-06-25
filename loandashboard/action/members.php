@@ -188,11 +188,25 @@ if($_POST['submit']!='' && $_POST['task']=='processsavings-edit')
 
 if($_POST['submit']!='' && $_POST['task']=='processpay')
 {
+
+
 	$tbl = "tbl_schedule";
 
 	if(empty($_REQUEST['penalty_payment'])){
 		$_REQUEST['penalty_payment'] = 0;
 	}
+
+
+	if($_REQUEST['submit']=='Delete'){
+
+    $query  = mysql_query_md("DELETE FROM tbl_schedule WHERE id ='{$_REQUEST['schedule_id']}'");
+	$_SESSION['noti'] = "Done deleting the payment.";
+	moveredirect($_POST['refer']."#loandataajax{$_REQUEST['schedule_id']}");
+	exit();
+	}
+
+
+
 
    $query  = mysql_query_md("SELECT * FROM tbl_schedule WHERE id ='{$_REQUEST['schedule_id']}'");
    $row=mysql_fetch_md_assoc($query);
@@ -234,6 +248,11 @@ if($_POST['submit']!='' && $_POST['task']=='processpaycustom')
 	if(empty($_REQUEST['penalty_payment'])){
 		$_REQUEST['penalty_payment'] = 0;
 	}
+
+
+
+
+
 
 
 	$_REQUEST['schedule_id'] = mysql_query_md_insert("INSERT INTO $tbl SET payment='{$_REQUEST['amount_payment']}',loan_id='{$_REQUEST['loan_id']}',user_id='{$_REQUEST['user_id']}',createdby='{$_SESSION['username']}',schedule='{$_REQUEST['date_payment']}',actual='{$_REQUEST['date_payment']}',savings='{$_REQUEST['savings_payment']}',penalty='{$_REQUEST['penalty_payment']}',remarks='{$_REQUEST['remarks_payment']}',is_paid='yes'");
@@ -286,6 +305,11 @@ if($_POST['submit']!='' && $_POST['task']=='processpaymutual')
 	if(empty($_REQUEST['penalty_payment'])){
 		$_REQUEST['penalty_payment'] = 0;
 	}
+
+
+
+
+
 
    $query  = mysql_query_md("SELECT * FROM tbl_schedule WHERE id ='{$_REQUEST['schedule_id']}'");
    $row=mysql_fetch_md_assoc($query);

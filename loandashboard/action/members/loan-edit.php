@@ -231,6 +231,8 @@ if($show) {
 
 <script>
    function createpayment(data){
+      
+      jQuery('#schedule_paymenthead').text('Create Payment for');
       var ajax = jQuery('#loandataajax'+data);
       jQuery('#schedule_payment').text(ajax.attr('tableloandata-schedule'));
       jQuery('#amount_payment').val(ajax.attr('tableloandata-payment'));
@@ -263,7 +265,7 @@ if($show) {
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Create Payment for <span id='schedule_payment'></span></h4>
+          <h4 class="modal-title"><span id='schedule_paymenthead'></span> <span id='schedule_payment'></span></h4>
         </div>
         <div class="modal-body">
           <form id='createpaymentform' method="POST" action="?pages=<?php echo $_GET['pages'];?>">
@@ -295,6 +297,7 @@ if($show) {
         </div>
         <div class="modal-footer">
          <input class='btn btn-default' type='submit' name='submit' value='Mark as Paid'>
+         <input class='btn btn-default' type='submit' name='submit' value='Delete'>
          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>
       </div>
