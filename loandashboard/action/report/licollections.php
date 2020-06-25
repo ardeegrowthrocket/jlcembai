@@ -3,6 +3,14 @@
  $_GET['is_paid'] = 'yes';
   $datefield = "actual";
 
+
+
+
+
+ $where = getwheresearch($field);
+
+
+
 if($_GET['date1'] != ''){
 
     if(empty($where)){
@@ -16,9 +24,7 @@ if($_GET['date1'] != ''){
  }
 
 
-
-
- $where = getwheresearch($field);
+ 
  $total = countquery("SELECT a.*,name,address,custom_label,contact FROM tbl_schedule_mutual as a LEFT JOIN tbl_members as b ON b.id=a.user_id $where");
  //primary query
  $limit = getlimit(100,$_GET['p']);
