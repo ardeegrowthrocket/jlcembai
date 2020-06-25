@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 include("connect.php");
 include("function.php");
@@ -194,8 +194,8 @@ jQuery( "#payment_type" ).change(function() {
   if(jQuery( "#payment_type" ).val()=="weekly"){
       jQuery("tr.members-loan-helper").show();
       jQuery("tr.members-loan-edit-helper").show();
-      jQuery("tr.members-loan-weeklyamount").show();
-      jQuery("tr.members-loan-edit-weeklyamount").show();
+      //jQuery("tr.members-loan-weeklyamount").show();
+     // jQuery("tr.members-loan-edit-weeklyamount").show();
 
 
       jQuery("tr.members-mutual-helper").show();
@@ -204,13 +204,14 @@ jQuery( "#payment_type" ).change(function() {
   }else{
        jQuery("tr.members-loan-helper").hide();
        jQuery("tr.members-loan-edit-helper").hide();
-      jQuery("tr.members-loan-weeklyamount").hide();
-      jQuery("tr.members-loan-edit-weeklyamount").hide();
+      // jQuery("tr.members-loan-weeklyamount").hide();
+      // jQuery("tr.members-loan-edit-weeklyamount").hide();
 
 
        jQuery("tr.members-mutual-helper").hide();
        jQuery("tr.members-mutual-edit-helper").hide();       
   }
+  autogenloan();
 });
 
 jQuery( "#payment_type" ).trigger('change');
@@ -231,11 +232,26 @@ function autogenloan(){
     var interest_amount = interest * amount;
     var net = interest_amount + amount;
 
-    var terms = parseFloat(jQuery('#terms').val()) * 4;
 
-    if(jQuery('#amtweekly'+jQuery('#terms').val()).length){
+    if(jQuery('#payment_type').val()=='weekly'){
 
-       var terms = jQuery('#amtweekly'+jQuery('#terms').val()).val();
+        var terms = parseFloat(jQuery('#terms').val()) * 4;
+
+        if(jQuery('#amtweekly'+jQuery('#terms').val()).length){
+
+           var terms = jQuery('#amtweekly'+jQuery('#terms').val()).val();
+
+        }
+
+    }
+    if(jQuery('#payment_type').val()=='monthly'){
+
+        var terms = parseFloat(jQuery('#terms').val()) * 1;
+
+    }
+    if(jQuery('#payment_type').val()=='cutoff'){
+
+        var terms = parseFloat(jQuery('#terms').val()) * 2;
 
     }
 
