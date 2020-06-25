@@ -117,6 +117,13 @@ if($show) {
    </div>
 </div> 
 
+ <button id='createpayment2' type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal2">Create Custom Payment</button>
+ <br/><br/>
+
+
+
+
+
 <style>
 .overdue {
   background-color: #efa3a3!important;
@@ -293,4 +300,63 @@ if($show) {
       </div>
       </form>
     </div>
+
+
+
   </div>
+
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal2" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Create Custom Payment</h4>
+        </div>
+        <div class="modal-body">
+          <form id='createpaymentform' method="POST" action="?pages=<?php echo $_GET['pages'];?>">
+         <input type='hidden' name="schedule_id" id="schedule_id">
+         <input type='hidden' name="user_id" value="<?php echo $_GET['uid']; ?>">
+         <input type='hidden' name="loan_id" value="<?php echo $_GET['id']; ?>">
+         <input type='hidden' name="task" value="processpaycustom">
+         <input type='hidden' name="refer" value="index.php?pages=<?php echo $_GET['pages']; ?>&task=<?php echo $_GET['task']; ?>&id=<?php echo $_GET['id']; ?>&uid=<?php echo $_GET['uid']; ?>">
+         <?php
+            $payment = array();
+            $payment[] = array("type"=>"date","value"=>"date_payment","label"=>"Actual Payment Date");
+            $payment[] = array("type"=>"number","value"=>"amount_payment","label"=>"Amount");
+            $payment[] = array("type"=>"number","value"=>"savings_payment","label"=>"Savings");
+
+            $penalty_type = "hidden";
+
+            if($_SESSION['role']==1) {
+              $penalty_type = "number";
+              $payment[] = array("type"=>$penalty_type,"value"=>"penalty_payment","label"=>"Penalty");
+
+
+            }
+
+
+
+
+            $payment[] = array("type"=>"textarea","value"=>"remarks_payment","label"=>"Remarks");
+         ?>
+         <?php echo loadform($payment,$sdata); ?>
+       
+        </div>
+        <div class="modal-footer">
+         <input class='btn btn-default' type='submit' name='submit' value='Mark as Paid'>
+         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+      </form>
+    </div>
+
+
+
+  </div>
+
+

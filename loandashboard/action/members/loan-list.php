@@ -74,8 +74,8 @@ foreach($field as $ff){
 
                     //$balance = ($row['loop_number'] - $row['loop_paid']) * $row['loop_amount'];
 
-                    $bal=mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule` WHERE loan_id = {$pid} AND is_paid = 'no'"));
-                    $balance = $bal['total'];
+                    $bal=mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule` WHERE loan_id = {$pid} AND is_paid = 'yes'"));
+                    $balance = $row['net'] -  $bal['total'];
                   ?>
                <tr>
                   <td><?php echo $row['loandesc']; ?></td>

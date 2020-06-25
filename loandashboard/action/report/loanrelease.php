@@ -141,8 +141,8 @@ foreach($field as $ff){
                     $interest_amount = ($row['amount'] * percentget($row['interest']));
                     $balance = ($row['loop_number'] - $row['loop_paid']) * $row['loop_amount'];
 
-                    $bal=mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule` WHERE loan_id = {$row['loanid']} AND is_paid = 'no'"));
-                    $balance = $bal['total'];
+                    $bal=mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule` WHERE loan_id = {$pid} AND is_paid = 'yes'"));
+                    $balance = $row['net'] -  $bal['total'];
 
 
                     

@@ -38,6 +38,11 @@ if($_POST['submit']!='' && $_POST['task']=='delete')
 	unset($_POST['task']);
 	$fields = formquery($_POST);
 	mysql_query_md("DELETE FROM $tbl WHERE $primary=".$_POST[$primary]);
+	mysql_query_md("DELETE FROM tbl_passbook WHERE user='{$_POST[$primary]}'");
+	mysql_query_md("DELETE FROM tbl_loan WHERE user='{$_POST[$primary]}'");
+	mysql_query_md("DELETE FROM tbl_mutual WHERE user='{$_POST[$primary]}'");
+	mysql_query_md("DELETE FROM tbl_schedule WHERE user_id='{$_POST[$primary]}'");
+	mysql_query_md("DELETE FROM tbl_schedule_mutual WHERE user_id='{$_POST[$primary]}'");
 	$_SESSION['noti'] = "Done deleting data.";
 	$refresh = 1;
 }
@@ -216,6 +221,57 @@ if($_POST['submit']!='' && $_POST['task']=='processpay')
 	moveredirect($_POST['refer']."#loandataajax{$_REQUEST['schedule_id']}");
 	exit();
 }
+
+
+
+if($_POST['submit']!='' && $_POST['task']=='processpaycustom')
+{
+
+	// var_dump($_REQUEST);
+	// exit();
+	$tbl = "tbl_schedule";
+
+	if(empty($_REQUEST['penalty_payment'])){
+		$_REQUEST['penalty_payment'] = 0;
+	}
+
+
+	$_REQUEST['schedule_id'] = mysql_query_md_insert("INSERT INTO $tbl SET payment='{$_REQUEST['amount_payment']}',loan_id='{$_REQUEST['loan_id']}',user_id='{$_REQUEST['user_id']}',createdby='{$_SESSION['username']}',schedule='{$_REQUEST['date_payment']}',actual='{$_REQUEST['date_payment']}',savings='{$_REQUEST['savings_payment']}',penalty='{$_REQUEST['penalty_payment']}',remarks='{$_REQUEST['remarks_payment']}',is_paid='yes'");
+
+
+
+   $query  = mysql_query_md("SELECT * FROM tbl_schedule WHERE id ='{$_REQUEST['schedule_id']}'");
+   $row=mysql_fetch_md_assoc($query);
+
+   if($row['is_paid']!='yes'){
+
+   	$loan  = mysql_query_md("UPDATE tbl_loan SET loop_paid = loop_paid + 1 WHERE id = {$row['loan_id']}");
+
+   }
+
+
+   	if(!empty($_REQUEST['savings_payment'])){
+   		mysql_query_md("DELETE FROM tbl_passbook WHERE schedule_id ='{$_REQUEST['schedule_id']}'");
+   		mysql_query_md("INSERT INTO tbl_passbook SET amount='{$_REQUEST['savings_payment']}',actual='{$_REQUEST['date_payment']}',ptype='savings',schedule_id ='{$_REQUEST['schedule_id']}',remarks='{$_REQUEST['remarks_payment']}',user='{$row['user_id']}',createdby='{$_SESSION['username']}'");
+	}
+
+
+
+
+
+
+	mysql_query_md("UPDATE $tbl SET loan_id='{$_REQUEST['loan_id']}',user_id='{$_REQUEST['user_id']}',createdby='{$_SESSION['username']}',schedule='{$_REQUEST['date_payment']}',actual='{$_REQUEST['date_payment']}',savings='{$_REQUEST['savings_payment']}',penalty='{$_REQUEST['penalty_payment']}',remarks='{$_REQUEST['remarks_payment']}',is_paid='yes' WHERE id ='{$_REQUEST['schedule_id']}'");
+
+
+	$_SESSION['noti'] = "Done marking the payment.";
+	moveredirect($_POST['refer']."#loandataajax{$_REQUEST['schedule_id']}");
+	exit();
+}
+
+
+
+
+
 
 
 
