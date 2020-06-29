@@ -5,7 +5,7 @@
  $total = countquery("SELECT id FROM tbl_loan $where");
  //primary query
  $limit = getlimit(100,$_GET['p']);
- $query = "SELECT * FROM tbl_loan $where $limit";
+ $query = "SELECT * FROM tbl_loan as a $where $limit";
 
  $q = mysql_query_md($query);
  $pagecount = getpagecount($total,100);
@@ -72,10 +72,10 @@ foreach($field as $ff){
                     $pid = $row['id'];
                     $interest_amount = ($row['amount'] * percentget($row['interest']));
 
-                    //$balance = ($row['loop_number'] - $row['loop_paid']) * $row['loop_amount'];
+                    if($row['balance']<=0) {
+                      $row['balance'] = 0;
+                    }        
 
-                    $bal=mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule` WHERE loan_id = {$pid} AND is_paid = 'yes'"));
-                    $balance = $row['net'] -  $bal['total'];
                   ?>
                <tr>
                   <td><?php echo $row['loandesc']; ?></td>
@@ -85,7 +85,7 @@ foreach($field as $ff){
                   <td><?php echo $row['interest']; ?>%</td>
                   <td><?php echo $row['terms']; ?></td>
                   
-                  <td><?php echo number_format($balance,2); ?></td>
+                  <td><?php echo number_format($row['balance'],2); ?></td>
                   <td><?php echo $row['createdby']; ?></td>
                 
 <!--                   <td><?php echo $row['penalty']; ?>%</td> -->

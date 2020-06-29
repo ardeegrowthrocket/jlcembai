@@ -141,15 +141,16 @@ foreach($field as $ff){
 
                     $csvrow = array();
                     $interest_amount = ($row['amount'] * percentget($row['interest']));
-                    $balance = ($row['loop_number'] - $row['loop_paid']) * $row['loop_amount'];
-                    $bal=mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule` WHERE loan_id = {$pid} AND is_paid = 'yes'"));
-                    $balance = $row['net'] -  $bal['total'];               
+
+                    if($row['balance']<=0) {
+                      $row['balance'] = 0;
+                    }        
                   ?>
                <tr>
                   <td><?php echo $csvrow[] = $row['name']; ?></td>
                   <td><?php echo $csvrow[] = $row['address']; ?></td>
                   <td><?php echo $csvrow[] = $row['custom_label']; ?></td>
-                  <td><?php echo $csvrow[] = number_format($balance,2); ?></td>
+                  <td><?php echo $csvrow[] = number_format($row['balance'],2); ?></td>
                   <td><?php echo $csvrow[] = $row['createdby']; ?></td>
  
 

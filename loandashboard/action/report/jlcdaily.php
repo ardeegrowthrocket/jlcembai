@@ -35,7 +35,7 @@
  //primary query
  $limit = getlimit(100000,$_GET['p']);
 
-$query = "SELECT actual, SUM(amount) as amt FROM (SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(1) as tips FROM tbl_schedule UNION SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(2) as tips FROM tbl_schedule_mutual UNION SELECT id,user,actual,amount,createdby,(0) as loan_id,(3) as tips FROM tbl_passbook WHERE schedule_id IS NULL) as tbl WHERE actual IS NOT NULL GROUP by actual $limit";
+$query = "SELECT actual, SUM(amount) as amt FROM (SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(1) as tips FROM tbl_schedule UNION SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(2) as tips FROM tbl_schedule_mutual UNION SELECT id,user,actual,amount,createdby,(0) as loan_id,(3) as tips FROM tbl_passbook WHERE schedule_id IS NULL) as tbl WHERE actual IS NOT NULL GROUP by actual ORDER by actual DESC $limit";
 
  $q = mysql_query_md($query);
  $pagecount = getpagecount($total,100000);

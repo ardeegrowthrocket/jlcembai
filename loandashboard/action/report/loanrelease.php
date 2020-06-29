@@ -122,7 +122,7 @@ foreach($field as $ff){
                   <th>Interest Amount</th>
                   <th>Interest</th>
                   <th>Terms</th>
-                  <th>Balance</th>
+<!--                   <th>Balance</th> -->
                   <th>Loan Release</th>
                   <th>C/O</th>
                </tr>
@@ -157,7 +157,7 @@ foreach($field as $ff){
                   <td><?php echo $csvrow[] = $row['interest']; ?>%</td>
                   <td><?php echo $csvrow[] = $row['terms']; ?></td>
                   
-                  <td><?php echo $csvrow[] = number_format($balance,2); ?></td>
+<!--                   <td><?php echo $csvrow[] = number_format($balance,2); ?></td> -->
                   <td><?php echo $csvrow[] = date("Y-m-d",strtotime($row['loan_release'])); ?></td>
                   <td><?php echo $csvrow[] = $row['createdby']; ?></td>
                   

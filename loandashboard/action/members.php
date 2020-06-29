@@ -4,6 +4,58 @@ require_once("./connect.php");
 require_once("./function.php");
 $tbl = "tbl_members";
 $primary = "id";
+
+
+function calibrate(){
+
+
+	$q = "SELECT a.id,(SELECT SUM(payment) as total FROM tbl_schedule WHERE loan_id = a.id AND is_paid='yes') as total,net FROM `tbl_loan` as a";
+
+	$sql  = mysql_query_md($q);
+
+	while($row = mysql_fetch_md_array($sql)){
+		$balance = $row['net'] - $row['total'];
+
+		if($balance<=0){
+			$balannce = 0;
+		}
+		mysql_query_md("UPDATE tbl_loan SET balance='{$balance}' WHERE id='{$row['id']}'");
+
+	}
+
+
+
+}
+
+function calibratemain($id){
+
+
+	$q = "SELECT a.id,(SELECT SUM(payment) as total FROM tbl_schedule WHERE loan_id = a.id AND is_paid='yes') as total,net FROM `tbl_loan` as a WHERE id='{$id}'";
+
+	$sql  = mysql_query_md($q);
+
+	while($row = mysql_fetch_md_array($sql)){
+		$balance = $row['net'] - $row['total'];
+
+		if($balance<=0){
+			$balannce = 0;
+		}
+
+		mysql_query_md("UPDATE tbl_loan SET balance='{$balance}' WHERE id='{$row['id']}'");
+
+	}
+
+
+
+}
+
+
+
+if($_GET['calibrate']){
+	calibrate();
+}
+
+
 /*SQL*/
 $refresh = 0;
 if($_POST['submit']!='' && $_POST['task']=='add')
@@ -230,6 +282,7 @@ if($_POST['submit']!='' && $_POST['task']=='processpay')
 
 	mysql_query_md("UPDATE $tbl SET createdby='{$_SESSION['username']}',actual='{$_REQUEST['date_payment']}',savings='{$_REQUEST['savings_payment']}',penalty='{$_REQUEST['penalty_payment']}',remarks='{$_REQUEST['remarks_payment']}',is_paid='yes' WHERE id ='{$_REQUEST['schedule_id']}'");
 
+	calibratemain($row['loan_id']);
 
 	$_SESSION['noti'] = "Done marking the payment.";
 	moveredirect($_POST['refer']."#loandataajax{$_REQUEST['schedule_id']}");
@@ -281,6 +334,9 @@ if($_POST['submit']!='' && $_POST['task']=='processpaycustom')
 
 	mysql_query_md("UPDATE $tbl SET loan_id='{$_REQUEST['loan_id']}',user_id='{$_REQUEST['user_id']}',createdby='{$_SESSION['username']}',schedule='{$_REQUEST['date_payment']}',actual='{$_REQUEST['date_payment']}',savings='{$_REQUEST['savings_payment']}',penalty='{$_REQUEST['penalty_payment']}',remarks='{$_REQUEST['remarks_payment']}',is_paid='yes' WHERE id ='{$_REQUEST['schedule_id']}'");
 
+
+
+	calibratemain($_REQUEST['loan_id']);
 
 	$_SESSION['noti'] = "Done marking the payment.";
 	moveredirect($_POST['refer']."#loandataajax{$_REQUEST['schedule_id']}");

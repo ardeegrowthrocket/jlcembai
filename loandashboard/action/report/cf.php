@@ -27,13 +27,13 @@
 
 
 
- $total = countquery("SELECT filter FROM (SELECT CONCAT(YEAR(actual),\"-\",MONTH(actual),\"-\",DAY(actual)) as filter FROM `tbl_schedule_mutual` WHERE is_paid = 'yes' GROUP by filter
+ $total = countquery("SELECT filter FROM (SELECT CONCAT(YEAR(actual),\"-\",MONTH(actual),\"-\",DAY(actual)) as filter FROM `tbl_schedule_mutual` WHERE is_paid = 'yess' GROUP by filter
 UNION
 SELECT CONCAT(YEAR(actual),\"-\",MONTH(actual),\"-\",DAY(actual)) as filter FROM `tbl_schedule` WHERE is_paid = 'yes' GROUP by filter
 UNION
 SELECT CONCAT(YEAR(actual),\"-\",MONTH(actual),\"-\",DAY(actual)) as filter FROM `tbl_passbook` GROUP by filter
 UNION
-SELECT CONCAT(YEAR(loan_release),\"-\",MONTH(loan_release),\"-\",DAY(loan_release)) as filter FROM `tbl_loan` WHERE is_release = 1 GROUP by filter
+SELECT CONCAT(YEAR(loan_release),\"-\",MONTH(loan_release),\"-\",DAY(loan_release)) as filter FROM `tbl_loan` WHERE is_release = 3 GROUP by filter
 UNION
 SELECT CONCAT(YEAR(actual),\"-\",MONTH(actual),\"-\",DAY(actual)) as filter FROM `tbl_expenses` WHERE loan_id IS NULL AND passbook_id IS NULL GROUP by filter) as tbl");
 
@@ -43,13 +43,13 @@ SELECT CONCAT(YEAR(actual),\"-\",MONTH(actual),\"-\",DAY(actual)) as filter FROM
  //primary query
  $limit = getlimit(100,$_GET['p']);
 
-$query = "SELECT filter FROM (SELECT CONCAT(YEAR(actual),\"-\",MONTH(actual),\"-\",DAY(actual)) as filter FROM `tbl_schedule_mutual` WHERE is_paid = 'yes' GROUP by filter
+$query = "SELECT filter FROM (SELECT CONCAT(YEAR(actual),\"-\",MONTH(actual),\"-\",DAY(actual)) as filter FROM `tbl_schedule_mutual` WHERE is_paid = 'yess' GROUP by filter
 UNION
 SELECT CONCAT(YEAR(actual),\"-\",MONTH(actual),\"-\",DAY(actual)) as filter FROM `tbl_schedule` WHERE is_paid = 'yes' GROUP by filter
 UNION
 SELECT CONCAT(YEAR(actual),\"-\",MONTH(actual),\"-\",DAY(actual)) as filter FROM `tbl_passbook` GROUP by filter
 UNION
-SELECT CONCAT(YEAR(loan_release),\"-\",MONTH(loan_release),\"-\",DAY(loan_release)) as filter FROM `tbl_loan` WHERE is_release = 1 GROUP by filter
+SELECT CONCAT(YEAR(loan_release),\"-\",MONTH(loan_release),\"-\",DAY(loan_release)) as filter FROM `tbl_loan` WHERE is_release = 3 GROUP by filter
 UNION
 SELECT CONCAT(YEAR(actual),\"-\",MONTH(actual),\"-\",DAY(actual)) as filter FROM `tbl_expenses` WHERE loan_id IS NULL AND passbook_id IS NULL GROUP by filter) as tbl ORDER by filter DESC";
 

@@ -1,7 +1,7 @@
 ﻿<?php
- $total = countquery("SELECT id FROM tbl_passbook WHERE user='{$_REQUEST['id']}' ORDER by actual ASC");
+ $total = countquery("SELECT id FROM tbl_passbook WHERE user='{$_REQUEST['id']}' ORDER by actual DESC");
  $limit = getlimit(100,$_GET['p']);
- $query = "SELECT * FROM tbl_passbook WHERE user='{$_REQUEST['id']}' ORDER by actual ASC $limit";
+ $query = "SELECT * FROM tbl_passbook WHERE user='{$_REQUEST['id']}' ORDER by actual DESC $limit";
  $q = mysql_query_md($query);
  $pagecount = getpagecount($total,100);
 

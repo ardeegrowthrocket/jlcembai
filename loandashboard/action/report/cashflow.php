@@ -25,6 +25,7 @@ $unpaid_mutual =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as tota
 
 $data_mutual['total'] = 0;
 
+$data_releases['total'] = 0;
 
 $added = array($data_loan['total'],$data_mutual['total'],$data_savings['total']);
 $deduct = array($data_withdraw['total'],$data_releases['total'],$data_expenses['total']);
@@ -136,10 +137,10 @@ $totaldeduct = array_sum($deduct);
                   <td>-<?php echo number_format($data_withdraw['total'],2); ?></td>
                 </tr>
 
-                <tr>
+<!--                 <tr>
                   <td>Loan Releases</td>
                   <td>-<?php echo number_format($data_releases['total'],2); ?></td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td>Other Expenses</td>
                   <td>-<?php echo number_format($data_expenses['total'],2); ?></td>

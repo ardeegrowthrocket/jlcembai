@@ -33,9 +33,22 @@
 
 
 
+    if(empty($where)){
+
+      $where = "WHERE loan_id IN (SELECT id FROM tbl_loan WHERE balance!=0)";
+    }else{
+
+      $where .= "AND  loan_id IN (SELECT id FROM tbl_loan WHERE balance!=0)";
+    }
 
 
- $total = countquery("SELECT a.id FROM tbl_schedule as a LEFT JOIN tbl_members as b ON a.user_id=b.id $where");
+
+
+
+
+
+
+ $total = countquery("SELECT a.id FROM tbl_schedule as a LEFT JOIN tbl_members as b ON a.user_id=b.id $where GROUP by a.user_id");
 
 
  #echo $where;
@@ -43,7 +56,7 @@
  //primary query
  $limit = getlimit(20,$_GET['p']);
 
-  $query = "SELECT a.*,name,address,contact,custom_label FROM tbl_schedule as a LEFT JOIN tbl_members as b ON a.user_id=b.id $where ORDER by schedule ASC  $limit";
+  $query = "SELECT a.*,name,address,contact,custom_label FROM tbl_schedule as a LEFT JOIN tbl_members as b ON a.user_id=b.id $where GROUP by a.user_id ORDER by schedule  ASC $limit";
 
  $q = mysql_query_md($query);
  $pagecount = getpagecount($total,20);

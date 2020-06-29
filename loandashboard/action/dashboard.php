@@ -43,7 +43,7 @@ ul.menuboard li {
         </li>
 
         <li>
-          <a href='index.php?pages=changepassword'>
+          <a href='index.php?pages=changepass'>
           <i class="fa fa-lock fa-2" aria-hidden="true"></i>
           <br/>
           <span>My Account - Change Password</span>

@@ -70,7 +70,7 @@ $field[] = array("type"=>"text","value"=>"custom_label","label"=>"Label");
     <li><a onclick="tabset(this)" href="#tabs-1">Member Information</a></li>
     <li><a onclick="tabset(this)" href="#tabs-2">Loans Information</a></li>
     <li><a onclick="tabset(this)" href="#tabs-3">Savings Passbook</a></li>
-    <li><a onclick="tabset(this)" href="#tabs-4">Mutual Fund / Life Insurance</a></li>
+    <li><a onclick="tabset(this)" href="#tabs-4">MBAI</a></li>
   </ul>
   <div id="tabs-1">
         <div class="panel panel-default">
