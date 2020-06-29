@@ -142,6 +142,7 @@ if($_POST['submit']!='' && $_POST['task']=='loan-delete-delete')
 
 	mysql_query_md("DELETE FROM tbl_expenses WHERE loan_id=".$_POST[$primary]);
 
+	mysql_query_md("DELETE FROM tbl_passbook WHERE schedule_id=".$_POST[$primary]);
 
 
 

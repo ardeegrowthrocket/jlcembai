@@ -5,7 +5,7 @@
  $total = countquery("SELECT id FROM tbl_loan $where");
  //primary query
  $limit = getlimit(100,$_GET['p']);
- $query = "SELECT * FROM tbl_loan as a $where $limit";
+ $query = "SELECT * FROM tbl_loan as a $where ORDER by loan_date DESC $limit";
 
  $q = mysql_query_md($query);
  $pagecount = getpagecount($total,100);
