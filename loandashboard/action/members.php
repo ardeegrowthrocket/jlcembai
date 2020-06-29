@@ -24,6 +24,18 @@ function calibrate(){
 	}
 
 
+	$sql  = mysql_query_md("SELECT * FROM tbl_loan WHERE name1 ='' OR name1 is NULL");
+
+	while($row = mysql_fetch_md_array($sql)){
+		$user = mysql_fetch_md_array(mysql_query_md("SELECT * FROM tbl_members WHERE id='{$row['user']}'"));
+		mysql_query_md("UPDATE tbl_loan SET name1='{$user['name1']}',contact1='{$user['contact1']}',address1='{$user['address1']}',occupation1='{$user['occupation1']}' WHERE user='{$row['user']}'");
+
+		mysql_query_md("UPDATE tbl_loan SET name2='{$user['name2']}',contact2='{$user['contact2']}',address2='{$user['address2']}',occupation2='{$user['occupation2']}' WHERE user='{$row['user']}'");
+
+	}
+
+
+
 
 }
 
@@ -200,15 +212,36 @@ if($_REQUEST['amount']>$total){
 if($_POST['submit']!='' && $_POST['task']=='processsavings-edit')
 {
 
+$userp = mysql_fetch_md_array(mysql_query_md("SELECT user FROM tbl_passbook WHERE id='{$_REQUEST['editid']}'"));	
+
+
+$user = mysql_fetch_md_array(mysql_query_md("SELECT name FROM tbl_members WHERE id='{$userp['user']}'"));
+
+
+	if($_REQUEST['submit']=='Delete'){
+
+	if(!empty($userp['schedule_id']))
+	{
+
+		mysql_query_md("UPDATE tbl_schedule SET savings = 0 WHERE id = '{$userp['schedule_id']}'");
+	}
+
+	mysql_query_md("DELETE FROM tbl_passbook WHERE id = '{$_REQUEST['editid']}'");
+	mysql_query_md("DELETE FROM tbl_expenses WHERE passbook_id = '{$_REQUEST['editid']}'");
+
+	$_SESSION['noti'] = "Done removing savings/withdrawal.";
+	moveredirect($_POST['refer'].'#tabs-3');
+	exit();
+
+
+
+	}
+
+
 	$tbl = "tbl_passbook";
 	mysql_query_md("UPDATE $tbl SET createdby='{$_SESSION['username']}',actual='{$_REQUEST['actual-edit']}',amount='{$_REQUEST['amount-edit']}',remarks='{$_REQUEST['remarks_payment-edit']}',ptype='{$_REQUEST['ptype-edit']}' WHERE id='{$_REQUEST['editid']}'");
 
 
-
-	$userp = mysql_fetch_md_array(mysql_query_md("SELECT user FROM tbl_passbook WHERE id='{$_REQUEST['editid']}'"));
-
-
-	$user = mysql_fetch_md_array(mysql_query_md("SELECT name FROM tbl_members WHERE id='{$userp['user']}'"));
 	$name = $user['name'];
 
 
@@ -222,8 +255,6 @@ if($_POST['submit']!='' && $_POST['task']=='processsavings-edit')
 	mysql_query_md("DELETE FROM tbl_expenses WHERE passbook_id = '{$_REQUEST['editid']}'");
 
 	mysql_query_md("INSERT INTO tbl_expenses SET amount='{$_REQUEST['amount-edit']}',remarks='{$remarks}',passbook_id='{$_REQUEST['editid']}',actual='{$current}',createdby='{$_SESSION['username']}'");
-
-
 }
 
 

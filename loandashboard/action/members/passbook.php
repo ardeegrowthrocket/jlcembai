@@ -216,7 +216,9 @@ $save =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM tbl
         </div>
         <div class="modal-footer">
          <input class='btn btn-default' type='submit' name='submit' value='Save'>
-<!--          <input class='btn btn-default' type='submit' name='submit' value='Delete'> -->
+         <?php if($_SESSION['role']==1) { ?>
+         <input class='btn btn-default' type='submit' name='submit' value='Delete'>
+         <?php } ?>
          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>
       </div>

@@ -85,6 +85,19 @@ $field[] = array("type"=>"text","value"=>"remarks");
 $field[] = array("type"=>"select","value"=>"is_release","label"=>"Loan Is Released?","option"=>$release);
 
 
+$field[] = array("skip"=>"text","label"=>"CO MAKER 1");
+$field[] = array("type"=>"text","value"=>"name1","label"=>"Name");
+$field[] = array("type"=>"text","value"=>"occupation1","label"=>"Occupation");
+$field[] = array("type"=>"text","value"=>"address1","label"=>"Address");
+$field[] = array("type"=>"text","value"=>"contact1","label"=>"Contact Number");
+
+$field[] = array("skip"=>"text","label"=>"CO MAKER 2");
+$field[] = array("type"=>"text","value"=>"name2","label"=>"Name");
+$field[] = array("type"=>"text","value"=>"occupation2","label"=>"Occupation");
+$field[] = array("type"=>"text","value"=>"address2","label"=>"Address");
+$field[] = array("type"=>"text","value"=>"contact2","label"=>"Contact Number");
+
+
 $show = 1;
 if($sdata['is_release']){
    $show = 0;
