@@ -284,6 +284,7 @@ if($_POST['submit']!='' && $_POST['task']=='processpay')
 	if($_REQUEST['submit']=='Delete'){
 
     $query  = mysql_query_md("DELETE FROM tbl_schedule WHERE id ='{$_REQUEST['schedule_id']}'");
+    $query  = mysql_query_md("DELETE FROM tbl_passbook WHERE schedule_id ='{$_REQUEST['schedule_id']}'");
 	$_SESSION['noti'] = "Done deleting the payment.";
 	moveredirect($_POST['refer']."#loandataajax{$_REQUEST['schedule_id']}");
 	exit();
