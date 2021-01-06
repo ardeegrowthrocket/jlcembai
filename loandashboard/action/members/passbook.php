@@ -19,8 +19,30 @@ $save =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM tbl
     display:none;
 }
 </style>
+
+
+
+
 <div class="panel panel-default">
    <div class="panel-body"> 
+
+        <div class="row">
+            <div class="col-md-12">
+               <div class="panel panel-default">
+                  <div class="panel-body">
+                      Remaining Balance: <?php echo number_format($save['total'] - $with['total'],2); ?>
+                  </div>
+               </div>
+            </div>           
+         </div>
+
+              
+            <button id='createpayment1' onclick="addsw('Add Savings','savings')" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Add Savings</button>
+            <button id='createpayment2' onclick="addsw('Add Withdraw','withdraw')"  type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Add Withdraw</button>
+
+
+
+    
       <div class="table-responsive">
 
          
@@ -108,19 +130,6 @@ $save =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM tbl
             </div> 
 
 
-        <div class="row">
-            <div class="col-md-12">
-               <div class="panel panel-default">
-                  <div class="panel-body">
-                      Remaining Balance: <?php echo number_format($save['total'] - $with['total'],2); ?>
-                  </div>
-               </div>
-            </div>           
-         </div>
-
-              
-            <button id='createpayment1' onclick="addsw('Add Savings','savings')" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Add Savings</button>
-            <button id='createpayment2' onclick="addsw('Add Withdraw','withdraw')"  type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Add Withdraw</button>
 
             <button id='createpayment3' style='display:none;' type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModalEdit">Add Withdraw</button>
    </div>

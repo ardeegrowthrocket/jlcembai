@@ -14,6 +14,8 @@ $field[] = array("type"=>"text","value"=>"username","label"=>"Username");
 //$field[] = array("type"=>"password","value"=>"password","label"=>"Password");
 $field[] = array("type"=>"email","value"=>"email","label"=>"Email");
 $field[] = array("type"=>"select","value"=>"role","label"=>"Role","option"=>array("0"=>"Teller","1"=>"Administrator"));
+
+$field[] = array("type"=>"select","value"=>"stores","label"=>"Branch","option"=>getarrayconfig('stores'));
 ?>
 <h2>Users</h2>
 <div class="panel panel-default">

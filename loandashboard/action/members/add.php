@@ -23,6 +23,7 @@ $field[] = array("type"=>"text","value"=>"contact");
 $field[] = array("type"=>"text","value"=>"spouse");
 $field[] = array("type"=>"text","value"=>"occupation");
 $field[] = array("type"=>"text","value"=>"dependents");
+
 $release = array();
 $release['0'] = "No";
 $release['1'] = "Yes";

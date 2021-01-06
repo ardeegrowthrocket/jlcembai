@@ -1,0 +1,2 @@
+[18-Jun-2020 15:01:27 Asia/Manila] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'root'@'localhost' (using password: NO) in /home/jointlin/public_html/loandashboard/connect.php on line 13
+[18-Jun-2020 15:02:14 Asia/Manila] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'root'@'localhost' (using password: NO) in /home/jointlin/public_html/loandashboard/connect.php on line 13

@@ -13,6 +13,8 @@ while($row=mysql_fetch_md_assoc($query))
 $field[] = array("type"=>"text","value"=>"username","label"=>"Username","attr"=>"disabled");
 //$field[] = array("type"=>"password","value"=>"password","label"=>"Password","attr"=>"disabled");
 $field[] = array("type"=>"email","value"=>"email","label"=>"Email","attr"=>"disabled");
+
+$field[] = array("type"=>"select","value"=>"stores","label"=>"Branch","option"=>getarrayconfig('stores'),"attr"=>"disabled");
 ?>
 <h2>Are you sure you want to delete?</h2>
 <div class="panel panel-default">

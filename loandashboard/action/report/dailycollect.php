@@ -32,7 +32,7 @@
 
  $total = countquery("SELECT id FROM (SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(1) as tips FROM tbl_schedule
 UNION
-SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(2) as tips FROM tbl_schedule_mutual
+SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(2) as tips FROM tbl_schedule_mutual WHERE id = 0
 UNION
 SELECT id,user,actual,amount,createdby,(0) as loan_id,(3) as tips FROM tbl_passbook WHERE schedule_id IS NULL AND ptype='savings') as tbl $where");
 
@@ -44,7 +44,7 @@ SELECT id,user,actual,amount,createdby,(0) as loan_id,(3) as tips FROM tbl_passb
 
 $query = "SELECT * FROM (SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(1) as tips FROM tbl_schedule
 UNION
-SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(2) as tips FROM tbl_schedule_mutual
+SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(2) as tips FROM tbl_schedule_mutual WHERE id = 0
 UNION
 SELECT id,user,actual,amount,createdby,(0) as loan_id,(3) as tips FROM tbl_passbook WHERE schedule_id IS NULL AND ptype='savings') as tbl $where ORDER by actual ASC  $limit";
 
