@@ -28,6 +28,14 @@
   $where .= "AND (loan_id IS NULL AND passbook_id IS NULL)";
  }
  
+      if(empty($where)){
+
+      $where = "WHERE stores = '{$_SESSION['stores']}'";
+    }else{
+
+      $where .= " AND stores = '{$_SESSION['stores']}'";
+    }
+
 
  
 $groupby = '';
@@ -55,7 +63,6 @@ $filter = "SELECT a.*,MONTH(actual) as month,WEEK(actual) as week,YEAR(actual) a
   }
 
 }
-
 
 
  $total = countquery("$filter $where $groupby");

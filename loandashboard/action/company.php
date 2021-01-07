@@ -9,21 +9,21 @@ require_once("./function.php");
  #q = mysql_query_md($query);
  $pagecount = getpagecount($total,100000);
 
-$data_loan =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment + penalty) as total FROM `tbl_schedule` WHERE is_paid = 'yes'"));
+$data_loan =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment + penalty) as total FROM `tbl_schedule` WHERE is_paid = 'yes' AND  stores = '{$_SESSION['stores']}'"));
 
-$data_mutual =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment + penalty) as total FROM `tbl_schedule_mutual` WHERE is_paid = 'yes'"));
+$data_mutual =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment + penalty) as total FROM `tbl_schedule_mutual` WHERE is_paid = 'yes' AND  stores = '{$_SESSION['stores']}'"));
 
-$data_savings =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_passbook` WHERE ptype='savings'"));
+$data_savings =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_passbook` WHERE ptype='savings' AND  stores = '{$_SESSION['stores']}'"));
 
-$data_withdraw =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_passbook` WHERE ptype='withdraw'"));
+$data_withdraw =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_passbook` WHERE ptype='withdraw' AND  stores = '{$_SESSION['stores']}'"));
 
-$data_releases =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_loan` WHERE is_release = 1"));
+$data_releases =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_loan` WHERE is_release = 1 AND  stores = '{$_SESSION['stores']}'"));
 
-$data_expenses =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_expenses` WHERE loan_id IS NULL AND passbook_id IS NULL"));
+$data_expenses =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_expenses` WHERE loan_id IS NULL AND passbook_id IS NULL AND  stores = '{$_SESSION['stores']}'"));
 
 
-$unpaid = mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule` WHERE is_paid!='yes'"));
-$unpaid_mutual =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule_mutual` WHERE is_paid!='yes'"));
+$unpaid = mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule` WHERE is_paid!='yes' AND  stores = '{$_SESSION['stores']}'"));
+$unpaid_mutual =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule_mutual` WHERE is_paid!='yes' AND  stores = '{$_SESSION['stores']}'"));
 
 
 

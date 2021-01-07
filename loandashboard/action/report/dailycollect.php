@@ -4,7 +4,6 @@
  $field = array("amount","remarks","is_paid");
  $where = getwheresearch($field);
 
- echo $where;
 
  $datefield = "actual";
 
@@ -30,11 +29,11 @@
 
 
 
- $total = countquery("SELECT id FROM (SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(1) as tips FROM tbl_schedule
+ $total = countquery("SELECT id FROM (SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(1) as tips FROM tbl_schedule WHERE stores='{$_SESSION['stores']}'
 UNION
-SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(2) as tips FROM tbl_schedule_mutual WHERE id = 0
+SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(2) as tips FROM tbl_schedule_mutual WHERE id = 0 AND stores='{$_SESSION['stores']}'
 UNION
-SELECT id,user,actual,amount,createdby,(0) as loan_id,(3) as tips FROM tbl_passbook WHERE schedule_id IS NULL AND ptype='savings') as tbl $where");
+SELECT id,user,actual,amount,createdby,(0) as loan_id,(3) as tips FROM tbl_passbook WHERE schedule_id IS NULL AND ptype='savings' AND stores='{$_SESSION['stores']}') as tbl $where");
 
 
  #echo $where;
@@ -42,11 +41,11 @@ SELECT id,user,actual,amount,createdby,(0) as loan_id,(3) as tips FROM tbl_passb
  //primary query
  $limit = getlimit(100000,$_GET['p']);
 
-$query = "SELECT * FROM (SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(1) as tips FROM tbl_schedule
+$query = "SELECT * FROM (SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(1) as tips FROM tbl_schedule WHERE stores='{$_SESSION['stores']}'
 UNION
-SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(2) as tips FROM tbl_schedule_mutual WHERE id = 0
+SELECT id,user_id,actual,(payment + penalty + savings) as amount,createdby,loan_id,(2) as tips FROM tbl_schedule_mutual WHERE id = 0 AND stores='{$_SESSION['stores']}'
 UNION
-SELECT id,user,actual,amount,createdby,(0) as loan_id,(3) as tips FROM tbl_passbook WHERE schedule_id IS NULL AND ptype='savings') as tbl $where ORDER by actual ASC  $limit";
+SELECT id,user,actual,amount,createdby,(0) as loan_id,(3) as tips FROM tbl_passbook WHERE schedule_id IS NULL AND ptype='savings' AND stores='{$_SESSION['stores']}') as tbl $where ORDER by actual ASC  $limit";
 
  $q = mysql_query_md($query);
  $pagecount = getpagecount($total,100000);

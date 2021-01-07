@@ -1,6 +1,18 @@
 ﻿<?php
  $field = array("name","address","contact","custom_label");
  $where = getwheresearch($field);
+
+
+      if(empty($where)){
+
+      $where = "WHERE a.stores = '{$_SESSION['stores']}'";
+    }else{
+
+      $where .= " AND a.stores = '{$_SESSION['stores']}'";
+    }
+
+
+ 
  $total = countquery("SELECT a.*,name,address,custom_label,contact FROM tbl_mutual as a LEFT JOIN tbl_members as b ON b.id=a.user $where");
  //primary query
  $limit = getlimit(10,$_GET['p']);

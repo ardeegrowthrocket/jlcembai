@@ -23,6 +23,17 @@ $where = getwheresearch($field);
  }else{
   $where .= "AND (loan_id IS NULL AND passbook_id IS NULL)";
  }
+
+  
+      if(empty($where)){
+
+      $where = "WHERE stores = '{$_SESSION['stores']}'";
+    }else{
+
+      $where .= " AND stores = '{$_SESSION['stores']}'";
+    }
+
+
  
  $total = countquery("SELECT id FROM tbl_expenses $where");
  #echo $where;

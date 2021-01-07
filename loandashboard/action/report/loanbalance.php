@@ -16,7 +16,7 @@
       $where = "WHERE $datefield BETWEEN '{$_GET['date1']} 00:00:00' and '{$_GET['date2']} 23:00:00'";
     }else{
 
-      $where .= "AND $datefield BETWEEN '{$_GET['date1']} 00:00:00' and '{$_GET['date2']} 23:00:00'";
+      $where .= " AND $datefield BETWEEN '{$_GET['date1']} 00:00:00' and '{$_GET['date2']} 23:00:00'";
     }
 
  }
@@ -28,13 +28,22 @@
       $where = "WHERE loop_paid != loop_number";
     }else{
 
-      $where .= "AND loop_paid != loop_number";
+      $where .= " AND loop_paid != loop_number";
+    }
+
+
+     if(empty($where)){
+
+      $where = "WHERE a.stores = '{$_SESSION['stores']}'";
+    }else{
+
+      $where .= " AND a.stores = '{$_SESSION['stores']}'";
     }
 
 
 
 
-
+//echo "SELECT a.id FROM tbl_loan as a LEFT JOIN tbl_members as b ON a.user=b.id $where";
 
  $total = countquery("SELECT a.id FROM tbl_loan as a LEFT JOIN tbl_members as b ON a.user=b.id $where");
 

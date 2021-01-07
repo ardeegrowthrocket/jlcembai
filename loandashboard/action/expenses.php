@@ -6,6 +6,9 @@ $tbl = "tbl_expenses";
 $primary = "id";
 /*SQL*/
 $refresh = 0;
+if($_POST['submit']!=''){
+	$_POST['stores'] = $_SESSION['stores']; 
+}
 if($_POST['submit']!='' && $_POST['task']=='add')
 {
 	unset($_POST['submit']);

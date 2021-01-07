@@ -6,12 +6,21 @@ $tbl = "tbl_members";
 $primary = "id";
 /*SQL*/
 $refresh = 0;
+if($_POST['submit']!=''){
+	$_POST['stores'] = $_SESSION['stores'];
+
+	var_dump($_POST);
+}
 if($_POST['submit']!='' && $_POST['task']=='add')
 {
 	unset($_POST['submit']);
 	unset($_POST['task']);
 	$_POST['createdby'] = $_SESSION['username'];
 	$fields = formquery($_POST);
+
+	echo "INSERT INTO $tbl SET $fields";
+
+	exit();
 	mysql_query_md("INSERT INTO $tbl SET $fields");
 	#setcookie('noti', "Done adding data",60, "/");
 
@@ -114,7 +123,7 @@ if($_REQUEST['amount']>$total){
 
 
 	$tbl = "tbl_passbook";
-	$sqli = mysql_query_md_insert("INSERT INTO $tbl SET createdby='{$_SESSION['username']}',actual='{$_REQUEST['actual']}',amount='{$_REQUEST['amount']}',remarks='{$_REQUEST['remarks_payment']}',ptype='{$_REQUEST['ptype']}',user='{$_REQUEST['id']}'");
+	$sqli = mysql_query_md_insert("INSERT INTO $tbl SET createdby='{$_SESSION['username']}',actual='{$_REQUEST['actual']}',amount='{$_REQUEST['amount']}',remarks='{$_REQUEST['remarks_payment']}',ptype='{$_REQUEST['ptype']}',user='{$_REQUEST['id']}',stores='{$_SESSION['stores']}'");
 
 
 	$user = mysql_fetch_md_array(mysql_query_md("SELECT name FROM tbl_members WHERE id='{$_REQUEST['id']}'"));
@@ -126,7 +135,7 @@ if($_REQUEST['amount']>$total){
 
 	if($_REQUEST['ptype']!='savings'){
 
-	mysql_query_md("INSERT INTO tbl_expenses SET amount='{$_REQUEST['amount']}',remarks='{$remarks}',passbook_id='{$sqli}',actual='{$current}',createdby='{$_SESSION['username']}'");
+	mysql_query_md("INSERT INTO tbl_expenses SET amount='{$_REQUEST['amount']}',remarks='{$remarks}',passbook_id='{$sqli}',actual='{$current}',createdby='{$_SESSION['username']}',stores='{$_SESSION['stores']}'");
 
 	}	
 
@@ -164,7 +173,7 @@ if($_POST['submit']!='' && $_POST['task']=='processsavings-edit')
 	
 	mysql_query_md("DELETE FROM tbl_expenses WHERE passbook_id = '{$_REQUEST['editid']}'");
 
-	mysql_query_md("INSERT INTO tbl_expenses SET amount='{$_REQUEST['amount-edit']}',remarks='{$remarks}',passbook_id='{$_REQUEST['editid']}',actual='{$current}',createdby='{$_SESSION['username']}'");
+	mysql_query_md("INSERT INTO tbl_expenses SET amount='{$_REQUEST['amount-edit']}',remarks='{$remarks}',passbook_id='{$_REQUEST['editid']}',actual='{$current}',createdby='{$_SESSION['username']}',stores='{$_SESSION['stores']}'");
 
 
 }
@@ -201,7 +210,7 @@ if($_POST['submit']!='' && $_POST['task']=='processpay')
 
    	if(!empty($_REQUEST['savings_payment'])){
    		mysql_query_md("DELETE FROM tbl_passbook WHERE schedule_id ='{$_REQUEST['schedule_id']}'");
-   		mysql_query_md("INSERT INTO tbl_passbook SET amount='{$_REQUEST['savings_payment']}',actual='{$_REQUEST['date_payment']}',ptype='savings',schedule_id ='{$_REQUEST['schedule_id']}',remarks='{$_REQUEST['remarks_payment']}',user='{$row['user_id']}',createdby='{$_SESSION['username']}'");
+   		mysql_query_md("INSERT INTO tbl_passbook SET amount='{$_REQUEST['savings_payment']}',actual='{$_REQUEST['date_payment']}',ptype='savings',schedule_id ='{$_REQUEST['schedule_id']}',remarks='{$_REQUEST['remarks_payment']}',user='{$row['user_id']}',createdby='{$_SESSION['username']}',stores='{$_SESSION['stores']}'");
 	}
 
 
@@ -312,7 +321,7 @@ if($_POST['submit']!='' && $_POST['task']=='loan-save')
 
 
 
-	mysql_query_md("INSERT INTO tbl_expenses SET amount='{$_REQUEST['amount']}',remarks='{$remarks}',loan_id='{$sqli}',actual='{$current}',createdby='{$_SESSION['username']}'");
+	mysql_query_md("INSERT INTO tbl_expenses SET amount='{$_REQUEST['amount']}',remarks='{$remarks}',loan_id='{$sqli}',actual='{$current}',createdby='{$_SESSION['username']}',stores='{$_SESSION['stores']}'");
 	
 	$date = generatedate($_POST);
 
@@ -327,6 +336,7 @@ if($_POST['submit']!='' && $_POST['task']=='loan-save')
 		$array['payment'] = $_POST['loop_amount'];
 		$array['user_id'] = $_POST['user'];
 		$array['loan_id'] = $sqli;
+		$array['stores'] = $_SESSION['stores'];
 		$fieldsv2 = formquery($array);
 		mysql_query_md("INSERT INTO tbl_schedule SET $fieldsv2");
 
@@ -397,7 +407,7 @@ if($_POST['submit']!='' && $_POST['task']=='loan-edit-save')
 	$remarks = "Loan Release {$amt} for $name - $current";
 
 	
-	mysql_query_md("INSERT INTO tbl_expenses SET amount='{$_REQUEST['amount']}',remarks='{$remarks}',loan_id='{$_POST['id']}',actual='{$current}',createdby='{$_SESSION['username']}'");
+	mysql_query_md("INSERT INTO tbl_expenses SET amount='{$_REQUEST['amount']}',remarks='{$remarks}',loan_id='{$_POST['id']}',actual='{$current}',createdby='{$_SESSION['username']}',stores='{$_SESSION['stores']}'");
 
 
 
@@ -414,6 +424,7 @@ if($_POST['submit']!='' && $_POST['task']=='loan-edit-save')
 		$array['payment'] = $_POST['loop_amount'];
 		$array['user_id'] = $_POST['user'];
 		$array['loan_id'] = $_POST['id'];
+		$array['stores'] = $_SESSION['stores'];
 		$fieldsv2 = formquery($array);
 		mysql_query_md("INSERT INTO tbl_schedule SET $fieldsv2");
 
@@ -502,6 +513,7 @@ if($_POST['submit']!='' && $_POST['task']=='mutual-save')
 		$array['payment'] = $_POST['loop_amount'];
 		$array['user_id'] = $_POST['user'];
 		$array['loan_id'] = $sqli;
+		$array['stores'] = $_SESSION['stores'];
 		$fieldsv2 = formquery($array);
 		mysql_query_md("INSERT INTO tbl_schedule_mutual SET $fieldsv2");
 

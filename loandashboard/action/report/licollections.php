@@ -23,6 +23,14 @@ if($_GET['date1'] != ''){
 
  }
 
+      if(empty($where)){
+
+      $where = "WHERE a.stores = '{$_SESSION['stores']}'";
+    }else{
+
+      $where .= " AND a.stores = '{$_SESSION['stores']}'";
+    }
+
 
  
  $total = countquery("SELECT a.*,name,address,custom_label,contact FROM tbl_schedule_mutual as a LEFT JOIN tbl_members as b ON b.id=a.user_id $where");

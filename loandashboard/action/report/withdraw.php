@@ -17,10 +17,19 @@
       $where = "WHERE $datefield BETWEEN '{$_GET['date1']} 00:00:00' and '{$_GET['date2']} 23:00:00'";
     }else{
 
-      $where .= "AND $datefield BETWEEN '{$_GET['date1']} 00:00:00' and '{$_GET['date2']} 23:00:00'";
+      $where .= " AND $datefield BETWEEN '{$_GET['date1']} 00:00:00' and '{$_GET['date2']} 23:00:00'";
     }
 
  }
+
+
+     if(empty($where)){
+
+      $where = "WHERE a.stores = '{$_SESSION['stores']}'";
+    }else{
+
+      $where .= " AND a.stores = '{$_SESSION['stores']}'";
+    }
 
 $groupby = '';
 if(empty($_GET['filter']))

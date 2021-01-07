@@ -8,6 +8,13 @@
 
 
 
+      if(empty($where)){
+
+      $where = "WHERE stores = '{$_SESSION['stores']}'";
+    }else{
+
+      $where .= " AND stores = '{$_SESSION['stores']}'";
+    }
 
 
 

@@ -7,21 +7,21 @@ if(empty($_GET['date1'])){
   $date = date("Y-m-d");
 }
 
-$data_loan =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment + penalty) as total FROM `tbl_schedule` WHERE is_paid = 'yes' AND actual LIKE '%$date%'"));
+$data_loan =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment + penalty) as total FROM `tbl_schedule` WHERE is_paid = 'yes' AND actual LIKE '%$date%' AND stores='{$_SESSION['stores']}'"));
 
-$data_mutual =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment + penalty) as total FROM `tbl_schedule_mutual` WHERE is_paid = 'yes' AND actual LIKE '%$date%'"));
+$data_mutual =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment + penalty) as total FROM `tbl_schedule_mutual` WHERE is_paid = 'yes' AND actual LIKE '%$date%' AND stores='{$_SESSION['stores']}'"));
 
-$data_savings =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_passbook` WHERE ptype='savings' AND actual LIKE '%$date%'"));
+$data_savings =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_passbook` WHERE ptype='savings' AND actual LIKE '%$date%' AND stores='{$_SESSION['stores']}'"));
 
-$data_withdraw =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_passbook` WHERE ptype='withdraw' AND actual LIKE '%$date%'"));
+$data_withdraw =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_passbook` WHERE ptype='withdraw' AND actual LIKE '%$date%' AND stores='{$_SESSION['stores']}'"));
 
-$data_releases =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_loan` WHERE is_release = 1 AND loan_release LIKE '%$date%'"));
+$data_releases =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_loan` WHERE is_release = 1 AND loan_release LIKE '%$date%' AND stores='{$_SESSION['stores']}'"));
 
-$data_expenses =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_expenses` WHERE loan_id IS NULL AND passbook_id IS NULL AND actual LIKE '%$date%'"));
+$data_expenses =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM `tbl_expenses` WHERE loan_id IS NULL AND passbook_id IS NULL AND actual LIKE '%$date%' AND stores='{$_SESSION['stores']}'"));
 
 
-$unpaid = mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule` WHERE is_paid!='yes'"));
-$unpaid_mutual =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule_mutual` WHERE is_paid!='yes'"));
+$unpaid = mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule` WHERE is_paid!='yes' AND stores='{$_SESSION['stores']}'"));
+$unpaid_mutual =mysql_fetch_md_array(mysql_query_md("SELECT SUM(payment) as total FROM `tbl_schedule_mutual` WHERE is_paid!='yes' AND stores='{$_SESSION['stores']}'"));
 
 $data_mutual['total'] = 0;
 
