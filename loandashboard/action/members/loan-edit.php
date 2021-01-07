@@ -84,7 +84,9 @@ $field[] = array("type"=>"date","value"=>"loan_start","label"=>"Payment Start Da
 $field[] = array("type"=>"text","value"=>"remarks");
 $field[] = array("type"=>"select","value"=>"is_release","label"=>"Loan Is Released?","option"=>$release);
 
+$fielda = $field;
 
+$field = array();
 
 $field[] = array("skip"=>"text","label"=>"CO MAKER 1");
 $field[] = array("type"=>"text","value"=>"name1","label"=>"Name");
@@ -119,7 +121,12 @@ if($show) {
       <input type='hidden' name='user' value='<?php echo $_GET['uid'];?>'>
       <input type='hidden' name='id' value='<?php echo $_GET['id'];?>'>
          
-         <?php echo loadform($field,$sdata,$show); ?>
+         <table style='width: 1000px;'>
+           <tr>
+            <td><?php echo loadform($fielda,$sdata,$show); ?></td>
+            <td><?php echo loadform($field,$sdata,$show); ?></td>
+          </tr>
+       </table>
 
          <hr>
          <?php
@@ -217,14 +224,14 @@ if($show) {
                   <td><?php echo $row['remarks']; ?></td>                                   
                   <td>
                     <?php if($row['is_paid']=='no') { ?>
-                     <input onclick="createpayment(<?php echo $row['id']; ?>);" type="button" class="btn btn-primary btn-sm" value="Create Payment">
+                     <input onclick="createpayment(<?php echo $row['id']; ?>);" type="button" class="btn btn-primary btn-sm" style='width: 111px;' value="Create Payment">
                     <?php }  
                     else 
                     { 
-                      echo "Paid <hr> <strong>Encoded by: {$row['createdby']}</strong>"; 
+                      echo "Paid -- <strong>Encoded by: {$row['createdby']}</strong><div class='spacerdata'></div>"; 
                       if($_SESSION['role']==1){
                       ?>
-                          <input onclick="createpayment(<?php echo $row['id']; ?>);" type="button" class="btn btn-primary btn-sm" value="Edit Payment">
+                          <input onclick="createpayment(<?php echo $row['id']; ?>);" type="button" class="btn btn-primary btn-sm" style='width: 111px;' value="Edit Payment">
                       <?php
                       }
                     }

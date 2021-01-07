@@ -396,7 +396,7 @@ line-height: 1.428571429;
  
  @media(min-width:768px) {
      #page-wrapper{
-               margin: 0 0 0 260px;
+         margin: 0 0 0 201px;
         padding: 15px 30px;
         min-height: 1200px;
 		
@@ -406,7 +406,7 @@ line-height: 1.428571429;
     .navbar-side {
         z-index: 1;
         position: absolute;
-        width: 260px;
+        width: 201px;
     }
 
    .navbar {

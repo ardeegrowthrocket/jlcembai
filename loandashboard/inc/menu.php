@@ -8,6 +8,15 @@
                Username: <?php echo $_SESSION['username']; ?>
                <br/>
                <?php if($_SESSION['role']==1){ echo "Role: Administrator"; } else { echo "Role :Teller"; }?>
+               <br/>
+               <?php
+               $stores = (getarrayconfig('stores'));
+               ?>     
+               Branch: <?php echo $stores[$_SESSION['stores']]; ?>
+               
+
+
+
             </div>
             <br/>
          </li>

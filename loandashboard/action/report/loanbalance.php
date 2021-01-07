@@ -53,7 +53,7 @@
  //primary query
  $limit = getlimit(20,$_GET['p']);
 
-  $query = "SELECT a.*,name,address,contact,custom_label,a.id as loanid FROM tbl_loan as a LEFT JOIN tbl_members as b ON a.user=b.id $where ORDER by loan_release ASC  $limit";
+ $query = "SELECT a.*,name,address,contact,custom_label,a.id as loanid FROM tbl_loan as a LEFT JOIN tbl_members as b ON a.user=b.id $where ORDER by loan_release ASC  $limit";
 
  $q = mysql_query_md($query);
  $pagecount = getpagecount($total,20);
@@ -96,14 +96,6 @@ foreach($field as $ff){
                         <td><input type='text' value='<?php echo $_GET['search']; ?>' name='search'></td>
                       </tr>
 
-<!--                       <tr>
-                        <td>To:</td>
-                        <td><input type='date' value='<?php echo $_GET['date1']; ?>' name='date1'></td>
-                      </tr>    
-                      <tr>
-                        <td>From:</td>
-                        <td><input type='date' value='<?php echo $_GET['date2']; ?>' name='date2'></td>
-                      </tr> -->
 
                     </table>
                     <br/>
@@ -134,7 +126,10 @@ foreach($field as $ff){
                   <th>Name</th>
                   <th>Address</th>
                   <th>Label</th>
+                  <th>Loan Amount</th>
+                  <th>Remitted</th>
                   <th>Balance</th>
+                  <th>Remarks</th>
                   <th>C/O</th>
                   <th>Action</th>
                </tr>
@@ -153,13 +148,32 @@ foreach($field as $ff){
 
                     if($row['balance']<=0) {
                       $row['balance'] = 0;
-                    }        
+                    }    
+
+                    $qrs = mysql_query_md("SELECT COUNT(*) as sum FROM `tbl_schedule` WHERE schedule < CURRENT_TIMESTAMP() AND is_paid!='yes' AND loan_id='{$row['loanid']}'");
+                    $qrsa=mysql_fetch_md_array($qrs);
+
+                    if($row['balance']==0){
+
+                        $delay =  " - ";
+                    }else{
+
+                      if(!empty($qrsa['sum'])){
+                          $delay =  "<span style='color:red;'>".$qrsa['sum']." Delayed Payments. </span>";
+                      }
+
+                    }
+                        
                   ?>
                <tr>
                   <td><?php echo $csvrow[] = $row['name']; ?></td>
                   <td><?php echo $csvrow[] = $row['address']; ?></td>
                   <td><?php echo $csvrow[] = $row['custom_label']; ?></td>
+                  <td><?php echo $csvrow[] = number_format($row['net'],2); ?></td>
+                  <td><?php echo $csvrow[] = number_format($row['net'] - $row['balance'],2); ?></td>
                   <td><?php echo $csvrow[] = number_format($row['balance'],2); ?></td>
+
+                  <td><?php echo $delay; ?></td>
                   <td><?php echo $csvrow[] = $row['createdby']; ?></td>
  
 
@@ -208,7 +222,7 @@ foreach($field as $ff){
                           {
                             $active = 'active';
                           }
-                          $url = "?search=".$_GET['search']."&pages=".$_GET['pages']."&search_button=Submit&p=".$c;
+                          $url = "?search=".$_GET['search']."&pages=".$_GET['pages']."&task=loanbalance&search_button=Submit&p=".$c;
                       ?>
                         <li class="paginate_button <?php echo $active; ?>" aria-controls="dataTables-example" tabindex="0"><a href="<?php echo $url; ?>"><?php echo $c; ?></a></li>
                       <?php
