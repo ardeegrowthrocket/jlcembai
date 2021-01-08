@@ -52,7 +52,9 @@ $save =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM tbl
                <tr role='row'>
                   <th>Date</th>
                   <th>Savings</th>
+                  <th>Dividend</th>
                   <th>Withdraw</th>
+                  <th>Running Balance</th>
                   <th>Remarks</th>
                   <th>C/O</th>
                   <th>Action</th>
@@ -68,17 +70,42 @@ $save =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM tbl
                     if($row['ptype']=='savings'){
                         $save = $row['amount'];
                         $balance = $balance + $row['amount'];
-                    }else{
+                    }
+
+                    else if($row['ptype']=='dividend'){
+
+                        $dividend = $row['amount'];
+                        $balance = $balance + $row['amount'];
+                    }
+
+                    else{
                        $withdraw = $row['amount'];
                        $balance = $balance - $row['amount'];
                     }
                     $pid = $row['id'];
                     $interest_amount = ($row['amount'] * percentget($row['interest']));
+
+
+$sub1 =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM tbl_passbook WHERE user='{$_REQUEST['id']}' AND ptype='withdraw' AND actual <= '{$row['actual']}'"));
+$add1 =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM tbl_passbook WHERE user='{$_REQUEST['id']}' AND ptype='savings' AND actual <= '{$row['actual']}'"));
+$add2 =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM tbl_passbook WHERE user='{$_REQUEST['id']}' AND ptype='dividend' AND actual <= '{$row['actual']}'"));
+
+$adddata1 = $add1['total'];
+$adddata2 = $add2['total'];
+$adddata3 = $sub1['total'];
+
+
+
+$running = ($adddata1 + $adddata2) - $adddata3;
+
+
                   ?>
                <tr>
                   <td><?php echo date("m-d-Y",strtotime($row['actual'])); ?></td>
                   <td><?php echo number_format($save,2); ?></td>
+                  <td><?php echo number_format($dividend,2); ?></td>
                   <td><?php echo number_format($withdraw,2); ?></td>
+                  <td><?php echo number_format($running,2); ?></td>
                   <td><?php echo $row['remarks']; ?></td>
                   <td><?php echo $row['createdby']; ?></td>
                   <td>
