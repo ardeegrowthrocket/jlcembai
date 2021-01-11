@@ -85,11 +85,13 @@ $vision =mysql_fetch_md_array(mysql_query_md("SELECT * FROM `tbl_system` WHERE c
 	
 	<section id="home" class="main-banner parallaxie" style="background: url('uploads/banner-01.jpg')">
 		<div class="heading">
-			<h1>Welcome to Joint Lineage Care <br/>(A Microfinance NGO)</h1>			
+			<h1>Welcome to Joint Lineage Care Microfinancing</h1>			
 			<h3 class="cd-headline clip is-full-width">
 				<span>Looking for ? </span>
 				<span class="cd-words-wrapper">
-					<b class="is-visible">Loan Assistance?</b>
+					<b class="is-visible">New Gadgets?</b>
+					<b>Emergency Loan?</b>
+					<b>Mutual Funds?</b>
 					<b>Added Budgets?</b>
 				</span>
 			</h3>
