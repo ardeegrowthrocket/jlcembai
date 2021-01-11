@@ -67,6 +67,7 @@ $save =mysql_fetch_md_array(mysql_query_md("SELECT SUM(amount) as total FROM tbl
                   {
                     $withdraw = 0;
                     $save = 0;
+                    $dividend = 0;
                     if($row['ptype']=='savings'){
                         $save = $row['amount'];
                         $balance = $balance + $row['amount'];
@@ -111,7 +112,8 @@ $running = ($adddata1 + $adddata2) - $adddata3;
                   <td>
                     <?php
                         $ajax = array();
-                        $row['actual'] = date("Y-m-d",strtotime($row['actual']));
+                        $row['actual'] = date("Y-m-d",strtotime($row['actual']))."T".date("H:i",strtotime($row['actual']));
+                        $row['actualv2'] = date("Y-m-d h:i A",strtotime($row['actual']));
                         foreach($row as $k=>$v){
                           $ajax[] = "data-{$k}='$v'";
                         }
@@ -175,7 +177,7 @@ $running = ($adddata1 + $adddata2) - $adddata3;
         {
           var json = jQuery(data);
           jQuery('#createpayment3').trigger('click');
-          jQuery('#addheadings2').text('Update entry - '+json.attr('data-actual'));
+          jQuery('#addheadings2').text('Update entry - '+json.attr('data-actualv2'));
 
           jQuery('#actual-edit').val(json.attr('data-actual'));
           jQuery('#amount-edit').val(json.attr('data-amount'));
@@ -206,7 +208,7 @@ $running = ($adddata1 + $adddata2) - $adddata3;
          <input type='hidden' name="refer" value="index.php?pages=<?php echo $_GET['pages']; ?>&task=<?php echo $_GET['task']; ?>&id=<?php echo $_GET['id']; ?>">
          <?php
             $payment = array();
-            $payment[] = array("type"=>"date","value"=>"actual","label"=>"Date");
+            $payment[] = array("type"=>"datetime-local","value"=>"actual","label"=>"Date");
             $payment[] = array("type"=>"number","value"=>"amount","label"=>"Amount");
            #$payment[] = array("type"=>"select","value"=>"ptype","label"=>"Add Type","option"=>array("withdrawal"=>"Withdraw","savings"=>"Savings"));
             $payment[] = array("type"=>"textarea","value"=>"remarks_payment","label"=>"Remarks");
@@ -247,7 +249,7 @@ $running = ($adddata1 + $adddata2) - $adddata3;
          <input type='hidden' name="refer" value="index.php?pages=<?php echo $_GET['pages']; ?>&task=<?php echo $_GET['task']; ?>&id=<?php echo $_GET['id']; ?>">
          <?php
             $payment = array();
-            $payment[] = array("type"=>"date","value"=>"actual-edit","label"=>"Date");
+            $payment[] = array("type"=>"datetime-local","value"=>"actual-edit","label"=>"Date");
             $payment[] = array("type"=>"number","value"=>"amount-edit","label"=>"Amount");
             $payment[] = array("type"=>"select","value"=>"ptype-edit","label"=>"Add Type","option"=>array("withdraw"=>"Withdraw","savings"=>"Savings"));
             $payment[] = array("type"=>"textarea","value"=>"remarks_payment-edit","label"=>"Remarks");

@@ -68,7 +68,12 @@ foreach($field as $ff){
 
                   ?>
                <tr>
-                  <td><?php echo $row['name']; ?></td>
+                  <td>
+                    <a style='color:green;' href='<?php echo "?pages=".$_GET['pages']."&task=edit&id=$pid"; ?>'>
+                      <?php echo $row['name']; ?>
+                   </a>
+                    
+                  </td>
                   <td><?php echo $row['contact']; ?></td>
                   <td><?php echo $row['address']; ?></td>
                   <td><?php echo $row['custom_label']; ?></td>

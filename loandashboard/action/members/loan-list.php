@@ -78,7 +78,12 @@ foreach($field as $ff){
 
                   ?>
                <tr>
-                  <td><?php echo $row['loandesc']; ?></td>
+                  <td>
+                    <a style='color:green;' href='<?php echo "?pages=".$_GET['pages']."&task=loan-edit&id=$pid&uid={$_GET['id']}"; ?>'>
+                      <?php echo $row['loandesc']; ?>
+                    </a>
+      
+                  </td>
                   <td><?php echo number_format($row['amount'],2); ?></td>
                   <td><?php echo number_format($row['net'],2);  ?></td>
                   <td><?php echo number_format($interest_amount,2); ?></td>

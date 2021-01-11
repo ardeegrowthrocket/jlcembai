@@ -13,7 +13,10 @@ $qrowxxx = mysql_query_md($queryrowxxx);
 $rowxxx = mysql_fetch_md_assoc($qrowxxx);
 foreach($rowxxx as $key=>$val)
 {
-$_SESSION[$key] = $val;
+  if($key!='stores'){
+    $_SESSION[$key] = $val;
+  }
+  
 }
 ?>
 <!DOCTYPE html>

@@ -212,6 +212,17 @@ function getpackagelist()
 
 function getwheresearchv2($field)
 {
+
+if($_GET['pages']=='report'){
+
+}
+
+else{
+	array_push($field,"stores");
+}
+
+
+
   $where = "WHERE ";
   $warray = array();
   $warray2 = array();
@@ -233,6 +244,28 @@ function getwheresearchv2($field)
   		}		
 
   }
+
+
+
+if($_GET['pages']=='report'){
+
+
+	//$warray2[]  = "tips.stores = '{$_SESSION['stores']}'";
+}
+
+
+
+else{
+
+	$warray2[]  = "stores = '{$_SESSION['stores']}'";
+}
+
+
+
+
+
+
+
 
   if(count($warray)){
   	$where .= "(".implode(" OR ", $warray).")";

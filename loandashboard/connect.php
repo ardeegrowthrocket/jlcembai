@@ -1,15 +1,44 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
 
+
+if(!empty($_GET['installnew']))
+{
+
+
+	$data = "tbl_accounts,tbl_expenses,tbl_files,tbl_loan,tbl_members,tbl_mutual,tbl_passbook,tbl_permission,tbl_schedule,tbl_schedule_mutual,tbl_sql,tbl_system";		
+
+	foreach(explode(",",$data) as $v)
+	{		
+		mysql_query_md("ALTER TABLE `$v` ADD `stores` INT(255) NULL DEFAULT '1'");
+	}
+
+
+
+}
+
+
+
 function moveredirect($url){
   echo "<script> window.location = '{$url}'; </script>";
 }
 
+
 function getconnection(){
-  return new mysqli("localhost","root","","jlc");
+  if($_SERVER['HTTP_HOST']=='jlc.local'){
+    return new mysqli("localhost","jlc2020","jlc2020","jlc2020");
+  }else{
+
+
+  }
+  return new mysqli("localhost","jointlin_jlc","oKcnL4P_zwf(","jointlin_jlc");
+  
 }
 function recordsql($q){
+if($_GET['debug']==1){
 
+  echo $q."<Br>";
+}
   $querydata = addslashes($_SESSION['username']."==".$q);
   $query = "INSERT INTO tbl_sql SET querydata='{$querydata}'";
 
@@ -46,6 +75,7 @@ if($t==0){
 }
 
 function mysql_query_md($q){
+
   recordsql($q);
   //if($_GET['debug']){
   //echo $q."<hr>";

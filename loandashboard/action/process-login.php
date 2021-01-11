@@ -18,8 +18,16 @@ if($count==1)
 	echo 1;
 	
 }
+if(!empty($_REQUEST['stores'])){
+
+	$_SESSION['stores'] = $_REQUEST['stores'];
+}
+
+
 if($count==0)
 {
 	echo $count;
 }
+
+
 ?>

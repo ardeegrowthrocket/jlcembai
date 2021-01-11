@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 include("connect.php");
 include("function.php");
@@ -51,7 +51,21 @@ if($_GET['error']==1)
                             <div class="panel-body">
                                 <form role="form">
                                        <br />
-                                     <div class="form-group input-group">
+                                       <?php
+                                        $stores = (getarrayconfig('stores'));
+
+                                        //var_dump($stores);
+                                       ?>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="fa fa-university"  ></i></span>
+                                            <select id="stores" type="text" class="form-control">
+                                              <?php foreach($stores as $aaa=>$bbb) { ?>
+                                                <option value='<?php echo $aaa;?>'><?php echo $bbb;?></option>
+                                              <?php } ?>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-tag"  ></i></span>
                                             <input id="username" type="text" class="form-control" placeholder="Your Username " />
                                         </div>
@@ -88,8 +102,9 @@ if($_GET['error']==1)
 	{
 		var username = $('#username').val();
 		var password = $('#password').val();
+    var stores = $('#stores').val();
 		$('#notibar').html('<div class="noti"><ul class="fa-ul"><li><i class="fa fa-cog fa-spin fa-li"></i> Please wait.. Checking your acccount.</li></ul></div>');
-    $.post("action/process-login.php",{username: username,password:password}, function(data, status){
+    $.post("action/process-login.php",{username: username,password:password,stores:stores}, function(data, status){
 		//alert(data);
 		$('#notibar').html('');
 		if(data=="0")
