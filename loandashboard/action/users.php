@@ -6,6 +6,8 @@ $tbl = "tbl_accounts";
 $primary = "accounts_id";
 /*SQL*/
 $refresh = 0;
+
+
 if($_POST['submit']!='' && $_POST['task']=='add')
 {
 	unset($_POST['submit']);

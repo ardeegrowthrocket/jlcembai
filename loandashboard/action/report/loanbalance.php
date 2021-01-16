@@ -152,7 +152,7 @@ foreach($field as $ff){
 
                     $qrs = mysql_query_md("SELECT COUNT(*) as sum FROM `tbl_schedule` WHERE schedule < CURRENT_TIMESTAMP() AND is_paid!='yes' AND loan_id='{$row['loanid']}'");
                     $qrsa=mysql_fetch_md_array($qrs);
-
+                    $delay = " - ";
                     if($row['balance']==0){
 
                         $delay =  " - ";
@@ -163,15 +163,40 @@ foreach($field as $ff){
                       }
 
                     }
-                        
+                        $balance = $row['net'] - $row['balance'];
+
+                        if($balance==$row['net']){
+                          $balance = 0;
+                        }
+
+
+
+                        $balance_remain = $row['balance'];
+
+                        if($row['balance']==0){
+                          $balance = $row['net']; 
+                        }
+
+
+                    $qrs2 = mysql_query_md("SELECT SUM(payment) as sum FROM `tbl_schedule` WHERE  is_paid='yes' AND loan_id='{$row['loanid']}'");
+                    $qrsa2=mysql_fetch_md_array($qrs2);
+
+                    $balance = $qrsa2['sum'];
+                    $balance_remain = $row['net'] - $qrsa2['sum'];
+
+
+
+
+
                   ?>
                <tr>
                   <td><?php echo $csvrow[] = $row['name']; ?></td>
                   <td><?php echo $csvrow[] = $row['address']; ?></td>
                   <td><?php echo $csvrow[] = $row['custom_label']; ?></td>
                   <td><?php echo $csvrow[] = number_format($row['net'],2); ?></td>
-                  <td><?php echo $csvrow[] = number_format($row['net'] - $row['balance'],2); ?></td>
-                  <td><?php echo $csvrow[] = number_format($row['balance'],2); ?></td>
+                  <td><?php echo $csvrow[] = number_format($balance,2); ?></td>
+                  <td><?php echo $csvrow[] = number_format($balance_remain,2); ?></td>
+                  
 
                   <td><?php echo $delay; ?></td>
                   <td><?php echo $csvrow[] = $row['createdby']; ?></td>

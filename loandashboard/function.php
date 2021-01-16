@@ -17,7 +17,10 @@ foreach ($list as $line) {
 fclose($file);
 }
 
-
+function systemconfig($field){
+$mission =mysql_fetch_md_array(mysql_query_md("SELECT * FROM `tbl_system` WHERE code='{$field}'"));
+return $mission['value'];	
+}
 
 
 function getbaseme()

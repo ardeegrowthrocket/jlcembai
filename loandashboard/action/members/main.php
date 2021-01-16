@@ -4,7 +4,7 @@
  $total = countquery("SELECT id FROM tbl_members $where");
  //primary query
  $limit = getlimit(10,$_GET['p']);
- $query = "SELECT * FROM tbl_members $where $limit";
+ echo $query = "SELECT * FROM tbl_members $where $limit";
 
  $q = mysql_query_md($query);
  $pagecount = getpagecount($total,10);
